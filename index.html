@@ -1,0 +1,3586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>YouTube Content Studio · CEO By Design</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+</head>
+<body>
+<div id="root"><div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:sans-serif;color:#7B5EA7">Loading...</div></div>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script>
+(function(){
+var useState=React.useState;
+var useEffect=React.useEffect;
+var useRef=React.useRef;
+var useCallback=React.useCallback;
+var useMemo=React.useMemo;
+
+//exports.default = App;
+const C = {
+  bg: "#F9F7FF",
+  surface: "#FFFFFF",
+  surfaceHigh: "#F2EDFF",
+  border: "#E4DAFF",
+  borderGlow: "#B89EF8",
+  lavLight: "#2E1760",
+  lavDim: "#A892CC",
+  violet: "#7B5EA7",
+  pink: "#B97EB0",
+  mint: "#3D9E8C",
+  mintDim: "#D0F5EE",
+  cream: "#2E1760",
+  muted: "#907CAF",
+  gold: "#A07840",
+  green: "#2E8B6A",
+  red: "#C0392B"
+};
+const FF = "'Instrument Sans',sans-serif";
+const FM = "'DM Mono',monospace";
+const GLOBAL_CSS = `
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  textarea,input{font-family:'Instrument Sans',sans-serif;}
+  body{background:#F9F7FF;}
+  ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-track{background:#F2EDFF;}::-webkit-scrollbar-thumb{background:#C9B8EE;border-radius:4px;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes holoFlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  @keyframes orb{0%,100%{transform:scale(1)translate(0,0)}50%{transform:scale(1.08)translate(6px,-4px)}}
+  ::placeholder{color:#BFB0D8;font-style:italic;}
+  .upload-zone:hover{border-color:#7B5EA7!important;background:#F2EDFF!important;}
+  .drag-over{border-color:#7B5EA7!important;background:#EDE6FF!important;}
+`;
+
+// ─── STATIC DATA ──────────────────────────────────────────────────────────────
+
+const TITLE_FORMULAS = [{
+  n: 1,
+  f: "How I'm planning to {achieve outcome} (as a {identity})"
+}, {
+  n: 2,
+  f: '"{interesting method}" is the easiest way to {achieve outcome}'
+}, {
+  n: 3,
+  f: "I did {lots of thing} and this is what I learned"
+}, {
+  n: 4,
+  f: "How I would {achieve outcome} FAST... (from scratch)"
+}, {
+  n: 5,
+  f: "How to {unbelievable-sounding outcome}"
+}, {
+  n: 6,
+  f: "It's Boring, But Will Make Even Beginners {achieve outcome}"
+}, {
+  n: 7,
+  f: "How to build a {thing} that actually {achieves result}"
+}, {
+  n: 8,
+  f: "They went from {undesirable state} to {desirable state}. Here's the shift."
+}, {
+  n: 9,
+  f: "The fastest path to {desirable outcome} (no fluff)"
+}, {
+  n: 10,
+  f: "Big {goals}, tiny {resource}? Here's what to do"
+}, {
+  n: 11,
+  f: "Give me {minutes} and I'll Force You to {do thing}"
+}, {
+  n: 12,
+  f: "I almost gave up on {thing}. Then I found {resource}. (now I {outcome})"
+}, {
+  n: 13,
+  f: "{Achieve outcome} with just {small number} changes"
+}, {
+  n: 14,
+  f: "I committed to {thing} for {timeframe}. The results surprised me."
+}, {
+  n: 15,
+  f: "I copied {authority type}'s exact {method}. It worked."
+}, {
+  n: 16,
+  f: "{Number} tiny {thing} changes that {achieve outcome} immediately"
+}, {
+  n: 17,
+  f: "The {thing nobody considers} that's secretly {driving outcome}"
+}, {
+  n: 18,
+  f: "Is It Still Worth {doing thing}?"
+}, {
+  n: 19,
+  f: "{Timeframe} from now, your {thing} could be unrecognizable. Start here."
+}, {
+  n: 20,
+  f: "The exact {process} I use to {achieve outcome} (nothing held back)"
+}, {
+  n: 21,
+  f: "You Need to {interesting concept}"
+}, {
+  n: 22,
+  f: "This is for {specific avatar} who {specific situation}"
+}, {
+  n: 23,
+  f: "{Number} changes that finally stopped {undesirable thing} for good"
+}, {
+  n: 24,
+  f: "If you're a {identity}, these {number} {things} will change your {outcome}"
+}, {
+  n: 25,
+  f: "The {niche} opportunity everyone's sleeping on right now"
+}, {
+  n: 26,
+  f: "{Thing} crash course: be better in {short timeframe}"
+}, {
+  n: 27,
+  f: "The real cheat code? {Surprisingly simple action}."
+}, {
+  n: 28,
+  f: "From scratch to {result}: proof that {method} works for anyone"
+}, {
+  n: 29,
+  f: "Forget {popular method}. This {alternative} outperforms it every time."
+}, {
+  n: 30,
+  f: "Nothing worked for {achieving thing}... until I tried {this}"
+}, {
+  n: 31,
+  f: "How {thing} transformed everything for me in just {timeframe}"
+}, {
+  n: 32,
+  f: "What a day actually looks like as a {niche persona}"
+}, {
+  n: 33,
+  f: "Stop {common action}. Start {unexpected action}."
+}, {
+  n: 34,
+  f: "{Thing} isn't hard. It's misunderstood."
+}, {
+  n: 35,
+  f: "{Number} {Niche} Secrets That Feel Like CHEATING"
+}, {
+  n: 36,
+  f: "When {thing} failed, I was forced to learn {better thing}"
+}, {
+  n: 37,
+  f: "No, it's not just you. {Validating their frustration}."
+}, {
+  n: 38,
+  f: "{Desirable outcome} without {sacrifice everyone assumes is required}"
+}, {
+  n: 39,
+  f: "What {authority type} actually do to {achieve result} (not what they tell you)"
+}, {
+  n: 40,
+  f: "I went all in on {thing} for {timeframe}. Worth it? Here's the truth."
+}, {
+  n: 41,
+  f: "I walked away from {impressive thing}. Here's why."
+}, {
+  n: 42,
+  f: "The unglamorous truth about {dream outcome}"
+}, {
+  n: 43,
+  f: "One daily habit that practically forces {desirable outcome}"
+}, {
+  n: 44,
+  f: "What's actually going on behind {thing that works}"
+}, {
+  n: 45,
+  f: "The part about {trendy thing} that nobody wants to say out loud"
+}, {
+  n: 46,
+  f: "Stop obsessing over {assumed priority}. Here's what actually matters."
+}, {
+  n: 47,
+  f: "The {niche} mistakes that are costing you {outcome} right now"
+}, {
+  n: 48,
+  f: "The daily routine that takes you from {bad state} to {good state}"
+}, {
+  n: 49,
+  f: "Everything comes down to this ONE {decision/action}"
+}, {
+  n: 50,
+  f: "Done with {old approach}? Good. Start {new approach} today."
+}, {
+  n: 51,
+  f: "After analyzing {impressive number} {things}, only {this} matters"
+}, {
+  n: 52,
+  f: "The step everyone skips before {starting thing} (then wonders why it fails)"
+}, {
+  n: 53,
+  f: "You think you need {surface desire}. You actually need {deeper desire}."
+}, {
+  n: 54,
+  f: "What separates {impressive group} from everyone else ({number} differences)"
+}, {
+  n: 55,
+  f: 'The "{invented concept}": how {doing opposite} actually gets you {result}'
+}, {
+  n: 56,
+  f: "What's coming in {niche} (and how to be ready before everyone else)"
+}, {
+  n: 57,
+  f: "{Number} 'smart' things that were actually holding me back"
+}, {
+  n: 58,
+  f: "How to {achieve outcome} even with {disadvantage}"
+}, {
+  n: 59,
+  f: "The least amount of effort to {achieve outcome} (seriously)"
+}, {
+  n: 60,
+  f: "{Bad state} to {good state}: the exact {method} that got me there"
+}, {
+  n: 61,
+  f: "Everyone's doing {niche}. Almost nobody understands {basic concept}."
+}, {
+  n: 62,
+  f: "A massive shift in {thing} is coming and almost nobody sees it"
+}, {
+  n: 63,
+  f: "Everyone teaches {thing}. Nobody teaches {the real part}."
+}, {
+  n: 64,
+  f: "Is it possible to {achieve outcome} solo in {timeframe}? I tested it."
+}, {
+  n: 65,
+  f: "If I could start over, I'd skip {thing} and learn {other thing}"
+}, {
+  n: 66,
+  f: "AI made me rethink everything about {how I do thing}"
+}, {
+  n: 67,
+  f: "Do {thing} the way a {aspirational identity} would"
+}, {
+  n: 68,
+  f: "The exact {process} behind {authority type}'s {niche results}"
+}, {
+  n: 69,
+  f: "How I finally {achieved thing} after {timeframe} of trying"
+}, {
+  n: 70,
+  f: "The {surprisingly simple thing} that changed everything for me"
+}, {
+  n: 71,
+  f: "Why {common thing} is keeping you stuck (and what to do instead)"
+}, {
+  n: 72,
+  f: "{Number} things I stopped doing that 10x'd my {outcome}"
+}, {
+  n: 73,
+  f: "The conversation nobody in {niche} is having"
+}, {
+  n: 74,
+  f: "What I wish someone had told me before I {did thing}"
+}, {
+  n: 75,
+  f: "The {timeframe} plan to {achieve outcome} (no fluff, no BS)"
+}, {
+  n: 76,
+  f: "You're not lazy. You're {reframe}."
+}, {
+  n: 77,
+  f: "Why I deleted my {thing} and never looked back"
+}, {
+  n: 78,
+  f: "The {thing} that works even when you don't feel like it"
+}, {
+  n: 79,
+  f: "How to {achieve outcome} in {short timeframe} (even as a beginner)"
+}, {
+  n: 80,
+  f: "This ONE mindset shift is worth {big number} to me"
+}, {
+  n: 81,
+  f: "The {niche} playbook nobody shares"
+}, {
+  n: 82,
+  f: "I spent {time/money} on {thing}. Here's what I learned."
+}, {
+  n: 83,
+  f: "Stop waiting for {thing}. Do {this} instead."
+}, {
+  n: 84,
+  f: "The truth about {desirable outcome} that took me {time} to learn"
+}, {
+  n: 85,
+  f: "How {type of person} actually {achieve outcome} (the real way)"
+}, {
+  n: 86,
+  f: "My {timeframe} experiment: {what I tried} and {result}"
+}, {
+  n: 87,
+  f: "The {niche} strategy that grew my {metric} by {result}"
+}, {
+  n: 88,
+  f: "Why your {thing} isn't working (and the fix is simpler than you think)"
+}, {
+  n: 89,
+  f: "I tried {popular method} for {timeframe}. Honest results."
+}, {
+  n: 90,
+  f: "{Number} signs you're closer to {outcome} than you think"
+}, {
+  n: 91,
+  f: "What nobody tells you about {desirable thing}"
+}, {
+  n: 92,
+  f: "The {adjective} way to {achieve outcome} that actually works"
+}];
+const BINGE_BANK_MAP = [{
+  n: 1,
+  pillar: "Foundation",
+  color: C.violet,
+  title: "Your Origin Story",
+  hook: "The moment everything changed",
+  desc: "Your breaking point. The personal transformation that makes you credible.",
+  loomQs: ["What was your life/career like before you found your current path? Be specific — timeline, what you were doing, how you felt.", "What was the breaking point or rock-bottom moment that forced a change? What happened?", "What did you discover, try, or shift that started turning things around?", "What is your life like now compared to then? What's the transformation?", "What's the moment you knew this was what you were meant to do or teach?", "Why does your story matter to the specific person watching? What's the parallel between your before and their right now?"]
+}, {
+  n: 2,
+  pillar: "Foundation",
+  color: C.violet,
+  title: "Your Values & Philosophy",
+  hook: "The contrarian stand",
+  desc: "The industry belief you reject. Your core philosophy. Filter aligned clients, repel the wrong ones.",
+  loomQs: ["What is the #1 belief in your industry that you think is completely wrong or harmful?", "What do most coaches or experts in your space teach that you fundamentally disagree with?", "What's your actual philosophy instead — what do YOU believe is the real path to results?", "What values are non-negotiable in how you work and teach?", "What would you never say, sell, or promote even if everyone else was doing it?", "Why does your contrarian stance actually get better results? What's the proof?"]
+}, {
+  n: 3,
+  pillar: "Transformation",
+  color: C.pink,
+  title: "Client Transformation Story",
+  hook: "Real proof it works",
+  desc: "A real before & after. Tangible evidence your methodology creates results.",
+  loomQs: ["Tell me about a specific client who had a dramatic transformation. What was their situation when they came to you?", "What were they struggling with, believing, or doing wrong before working with you?", "Walk me through exactly what shifted for them — what did they do, learn, or change?", "What is their life/business like now? Be as specific as possible — numbers, milestones, mindset.", "What surprised you most about their transformation?", "What does their story prove is possible for the person watching this video right now?"]
+}, {
+  n: 4,
+  pillar: "Transformation",
+  color: C.pink,
+  title: "Your Signature Methodology",
+  hook: "The IP deep-dive",
+  desc: "Name your framework. Teach the 3-5 steps. Establish proprietary authority.",
+  loomQs: ["What is your signature framework or methodology called? How did you come to name it?", "Walk me through each step of the framework in detail — what happens at each stage?", "Why does the order of these steps matter? What breaks if you skip one?", "What makes your approach genuinely different from every other method out there?", "What's the biggest transformation someone experiences by going through this framework?", "What's an analogy or metaphor that makes this framework click for people instantly?"]
+}, {
+  n: 5,
+  pillar: "Transformation",
+  color: C.pink,
+  title: "Unique Application & Nuance",
+  hook: "The expert edge cases",
+  desc: "The 'it depends' layer. Advanced nuance that shows mastery.",
+  loomQs: ["What's the most common mistake people make even when they're trying to follow your method?", "What's something that works differently depending on the person — where one size does NOT fit all?", "What's the counterintuitive part of your work that surprises people when they first hear it?", "What question does nobody ask you but really should?", "What's an advanced insight you only share with clients who've been working with you for a while?", "What nuance separates the people who get results from those who stay stuck?"]
+}, {
+  n: 6,
+  pillar: "Invitation",
+  color: C.mint,
+  title: "The Bridge to Your Offer",
+  hook: "Knowledge vs. implementation",
+  desc: "What they've learned vs. what they still can't do alone. Why your container bridges that gap.",
+  loomQs: ["What can someone learn from watching all your videos that they still won't be able to fully implement alone?", "What's the gap between knowing and doing — and why does that gap exist?", "What do your clients get from working with you that they genuinely couldn't get on their own?", "What's the cost of staying stuck — what does another 6-12 months without solving this actually look like for them?", "How does your offer specifically bridge the knowledge-to-implementation gap?", "Who is this offer specifically for — and who is it NOT for?"]
+}, {
+  n: 7,
+  pillar: "Invitation",
+  color: C.mint,
+  title: "The Direct Invitation",
+  hook: "Full energy, no apology",
+  desc: "Who this is for. What they'll achieve. The clear next step. Full conviction.",
+  loomQs: ["Describe your ideal client in full — who are they, what are they struggling with, what do they want more than anything?", "What will their life or business look like 90 days after joining your offer?", "What makes this offer different from everything else they could try?", "What's the investment and what do they get? Walk through it confidently.", "What's the one thing you want them to do after watching this video?", "What would you say directly to the person who is sitting on the fence right now?"]
+}];
+const BRAIN_DUMP_QS = ["What is top of mind for me right now in my business journey?", "What is a mistake I made early on that I wish someone had warned me about?", "What question do I keep getting from my audience?", "What did I just figure out that I'm genuinely excited about?", "What is something I used to believe that I now know is completely wrong?", "What would I tell myself 6 months ago if I could go back?", "What is the one thing that moved the needle the most for me recently?", "What is something everyone in my space does that I think is a total waste of time?", "What has been the hardest lesson I've learned in my business so far?", "What is one thing my audience doesn't realize they're getting wrong?", "What process or system changed everything for me once I figured it out?", "What is the question nobody asks me — but they really should?", "What was my biggest win this month and what actually caused it?", "What is a common piece of advice in my niche that I completely disagree with?", "What is one belief I had to let go of before I could grow?", "What keeps coming up in conversations with my clients that I could teach on?", "What story have I never shared publicly that my audience actually needs to hear?", "What do I wish the online business world would stop saying or doing?", "What do I do differently than everyone else in my space?", "What is the transformation my best clients experience that surprises even them?"];
+const STORY_BANK_PROMPT = `You are my personal brand strategist and story excavator. Your job is to interview me and pull out every powerful story, belief, experience, turning point, and piece of wisdom I've ever had — then organize it into a master Story Bank I can draw from for YouTube content for years.
+
+Ask me questions across these 7 categories. Go deep. Follow up on anything that sounds like there's more beneath the surface. Keep asking until you've mined every angle.
+
+CATEGORY 1 — ORIGIN & TRANSFORMATION
+- What was your lowest point? What specifically happened?
+- What was the moment you knew you had to change?
+- What did you lose before you found your path?
+- Walk me through your before → after arc in full detail.
+
+CATEGORY 2 — FAILURES & LESSONS
+- What's a mistake that cost you the most — time, money, or identity?
+- What did you try that completely didn't work? What happened?
+- What advice did you follow that was completely wrong for you?
+- What did you almost give up on? What made you keep going?
+
+CATEGORY 3 — BELIEFS & PHILOSOPHY
+- What do you believe about money, success, or business that most people would disagree with?
+- What's something you stopped believing that used to hold you back?
+- What's a spiritual or energetic principle that changed how you operate?
+- What do you know now that you wish you knew at the beginning?
+
+CATEGORY 4 — PROOF & CLIENT WINS
+- Tell me about a client whose results still surprise you.
+- What's the fastest transformation you've ever witnessed?
+- When did you first realize your work actually worked?
+- What result have you created for yourself that proves your method?
+
+CATEGORY 5 — IDENTITY & BECOMING
+- Who did you have to stop being to become who you are?
+- What part of yourself did you hide in your content that — once revealed — attracted your people?
+- What version of yourself are you still becoming?
+- What do people misunderstand about you?
+
+CATEGORY 6 — CONTROVERSIAL TAKES & UNIQUE ANGLES
+- What's something you believe that almost everyone in your industry gets wrong?
+- What's advice you'd never give even though everyone else does?
+- What would you say to someone who thinks [common objection in your niche]?
+- What's a pattern you see in your clients or community that they can't see in themselves?
+
+CATEGORY 7 — VISION & PURPOSE
+- What impact do you want to leave on the people you serve?
+- What does the world look like if your work succeeds at scale?
+- Why does this specific work matter to YOU — not just your clients?
+- What would you do even if you weren't paid for it?
+
+---
+
+After I've answered all your questions, compile everything into a MASTER STORY BANK organized like this:
+
+# MY STORY BANK
+
+## 🔥 ORIGIN STORIES (5–8 stories)
+[Story title — 2-3 sentence summary of the story and the core insight it reveals]
+
+## 💡 LESSON STORIES (5–8 stories)  
+[Story title — the mistake, what happened, what it taught]
+
+## 🌀 BELIEF/PHILOSOPHY STORIES (8–10 stories)
+[Story title — the belief, where it came from, why it matters to my audience]
+
+## ✨ PROOF STORIES (5–8 stories)
+[Story title — the result, the context, the takeaway]
+
+## 🦋 IDENTITY STORIES (5–8 stories)
+[Story title — who I was, the shift, who I became]
+
+## 🔥 CONTROVERSIAL TAKES (5–8 stories)
+[The stance, the nuance, the reason I hold it]
+
+## 🌟 VISION STORIES (3–5 stories)
+[The dream, the why behind it, how I got here]
+
+---
+Total: 40–55 stories. Each one is a YouTube video waiting to happen. Label each with a suggested content angle: [YOUTUBE HOOK ANGLE: ______]
+
+Start by introducing yourself as my brand strategist and asking me the first question. Then follow up naturally — this should feel like an interview, not a form. Go one category at a time.`;
+const THUMBNAIL_TYPES = [{
+  type: "Result / Showcase",
+  desc: "Outcome or screenshot center. Face small in corner. Max 4 words.",
+  prompt: "YouTube thumbnail. Topic: {title}. Spiritual business coach. Lavender/white/soft purple. Result graphic center, creator face small bottom corner, bold 4-word white text with shadow. 3 elements max. Premium modern spiritual."
+}, {
+  type: "Transformation Split Screen",
+  desc: "BEFORE left (desaturated) + AFTER right (vibrant). Arrow between.",
+  prompt: "YouTube thumbnail. Topic: {title}. Split screen: left desaturated before state, right vibrant lavender-violet after state. Bold 3-word overlay. Spiritual business. Clean and premium."
+}, {
+  type: "Talking Head + Bold Text",
+  desc: "Your face left. Bold text right. Max 5 words. High contrast.",
+  prompt: "YouTube thumbnail. Topic: {title}. Creator face left third, confident expression. Right: bold white text dark outline max 5 words. Soft lavender gradient background. Trust-building, modern, spiritual."
+}, {
+  type: "Curiosity / Pattern Interrupt",
+  desc: "Unexpected visual. 2 words max. Makes them stop scrolling.",
+  prompt: "YouTube thumbnail. Topic: {title}. Unexpected visually striking concept. 2 words max. Vibrant lavender violet white. Sophisticated spiritual — elevated and modern."
+}];
+const MASTER_BRAIN_PROMPT = `You are a brand strategist and YouTube content architect. Compile this Loom transcript into a comprehensive MASTER BUSINESS BRAIN — a first-person AI context document used to generate YouTube content going forward.
+
+Be radically specific. Use their real names, numbers, phrases, and exact words. No filler. Mark gaps with [TO ADD].
+
+Here is their raw Loom transcript:
+"""
+[PASTE YOUR LOOM TRANSCRIPT HERE]
+"""
+
+---
+# MASTER BUSINESS BRAIN
+## [Name] | [Business Name] | [Role]
+
+## 1. WHO I AM & WHAT I DO
+[2-3 sentences: name, what I do, who I serve, core transformation — like an elevator pitch I believe]
+
+## 2. MY OFFERS & BUSINESS MODEL
+[Each offer: Name · Price · Format · Who it's for · What's included]
+**Primary offer:** [main revenue driver]
+**Entry-point offer:** [lowest barrier first purchase]
+**How I get clients:** [organic / referrals / ads / community]
+
+## 3. MY REVENUE & GROWTH GOALS
+**90-day goal:** [specific] · **12-month goal:** [specific] · **Team:** [solo / VA / team]
+
+## 4. MY IDEAL CLIENT — IN THEIR OWN WORDS
+**Who they are:** [demographics + psychographics]
+**Their deepest desire:** [what they actually want — emotional, specific]
+**What keeps them up at night:** [fears, anxieties]
+**Their #1 frustration:** [what's not working]
+**Mistakes they keep making:** [what they do wrong before finding me]
+**What they've already tried:** [other solutions, coaches, courses]
+**The words they use:** [exact phrases from DMs, comments — in quotes]
+**Where they hang out:** [platforms, communities, accounts they follow]
+
+## 5. MY ORIGIN STORY
+[Full arc: who I was before, what broke, what I discovered, who I became. Specific — timelines, emotions, places. Write as a narrative I can riff off on camera.]
+
+## 6. MY UNIQUE ANGLE & POSITIONING
+[What makes me genuinely different — specific combination of background, methodology, perspective]
+**My contrarian stance:** [mainstream belief I openly reject]
+**Why I'm qualified:** [credentials, lived experience, results]
+**Who I'm NOT for:** [be specific]
+
+## 7. MY SIGNATURE METHODOLOGY
+**Framework name:** [what I call it]
+**Core promise:** [what someone achieves]
+**Steps:** 1. [name + sentence] 2. [name + sentence] 3. [name + sentence]
+**What makes it proprietary:** [the unique angle]
+**Transformation:** from [X] to [Y] using [Z]
+
+## 8. CLIENT PROOF & RESULTS
+[Specific wins. Names/numbers/timelines. These become proof points in every video.]
+
+## 9. MY YOUTUBE CHANNEL CONCEPT
+**Channel promise:** [transformation across all my videos]
+**Content niche:** [specific intersection of topics I own]
+**Videos I'm excited to make:** [topics, formats, ideas]
+**Content that's already resonated:** [posts, reels, emails with strong reactions]
+**Format comfort zone:** [talking head / screenshare / both]
+
+## 10. MY TEACHING STYLE & CAMERA PRESENCE
+**How I naturally teach:** [storytelling / frameworks / coaching / etc.]
+**Energy on camera:** [how I or clients describe my presence]
+**Go-to analogies:** [metaphors I always reach for]
+**Go-to stories:** [2-3 personal stories I return to again and again]
+
+## 11. MY BRAND VOICE & LANGUAGE
+**Tone:** [warm / direct / spiritual / grounded — be specific]
+**Words I always use:** [signature phrases, catchphrases]
+**Words I NEVER use:** [off-brand language]
+**Hard nos in content:** [topics, angles, formats I will never do]
+
+## 12. MY CONTENT PILLARS
+1. **[Pillar]:** [what it covers and why it matters]
+2. **[Pillar]:** [one sentence]
+3. **[Pillar]:** [one sentence]
+4. **[Pillar]:** [one sentence]
+
+## 13. THE OBJECTION MAP
+**Content objections:** [why someone might scroll past my video]
+**Offer objections:** [top 3-5 reasons people don't buy — their exact words]
+**The hidden objection:** [the real reason under the surface reason]
+
+## 14. MY SPIRITUAL & ENERGETIC FRAMEWORK
+**HD type & strategy:** [type, authority, profile]
+**How I use spiritual frameworks in content:** [teach directly / internal compass / both]
+**The deeper mission:** [purpose beneath the business strategy]
+
+---
+END OF MASTER BUSINESS BRAIN
+
+HOW TO USE: Paste this at the start of any Claude conversation: "This is my complete business context. Use this to inform every response."`;
+const BRAIN_BUILD_QUESTIONS = [{
+  section: "Business, Offers & Audience",
+  color: C.violet,
+  qs: ["What's your name, business name, and role — and in one sentence, what do you do and who do you serve?", "Walk me through every offer: name, price, delivery format, who it's for. What's your entry-point offer? How do you primarily get clients? 90-day and 12-month revenue goals?", "Describe your ideal client in full — age, life stage, deepest desire, what keeps them up at night, what they've already tried, and the exact words they use when they reach out.", "What objections do you hear — to your content and to your offer? What's the real hidden objection under what they say out loud?"]
+}, {
+  section: "Story, Method, Proof & YouTube",
+  color: C.pink,
+  qs: ["Tell me your full origin story — who you were before, what broke, what you discovered, who you became. Specific: timeline, emotions, the moment things changed.", "Your signature methodology — what you call it, the core steps, what makes it uniquely yours. Your contrarian stance: the mainstream belief you openly reject.", "Best client proof points — specific results, wins, transformations. Names, numbers, timelines. Also: what content has gotten the strongest reaction?", "Your energy and teaching style on camera. Words and phrases you always use — and never say. The YouTube channel you're building and what you're most excited to teach."]
+}];
+
+// ─── PROMPT BUILDERS ──────────────────────────────────────────────────────────
+function ctx(vault, vis, letter) {
+  let c = "";
+  if (vault) c += `\n\n--- MASTER BUSINESS BRAIN ---\n${vault}`;
+  if (vis) c += `\n\n--- VISIBILITY BY DESIGN REPORT ---\n${vis}`;
+  if (letter) c += `\n\n--- LETTER FROM HIGHER SELF ---\n${letter}`;
+  return c;
+}
+function titlesPrompt(transcript, vault, vis, letter, bbSlot, seriesSlot) {
+  const formulas = TITLE_FORMULAS.map(f => `#${f.n}: ${f.f}`).join("\n");
+  const bbNote = bbSlot ? `\nBINGE BANK VIDEO ${bbSlot.n}: "${bbSlot.title}" — ${bbSlot.desc}\n` : "";
+  const seriesNote = seriesSlot ? `\nSERIES: "${seriesSlot.seriesTitle}" — Video ${seriesSlot.n}: "${seriesSlot.title}"\n` : "";
+  return `You are a YouTube title strategist for a spiritual business coach.${ctx(vault, vis, letter)}
+
+My content transcript:
+"""
+${transcript}
+"""
+${bbNote}${seriesNote}
+Here are 92 proven YouTube title formulas:
+${formulas}
+
+Generate EXACTLY 50 complete YouTube title suggestions using REAL specifics from my transcript — no placeholders. Every title must be complete and ready to use.
+
+Format:
+1. [COMPLETE TITLE] — Formula #[n]
+(continue to 50)
+
+Then:
+## 🏆 TOP 10 RANKED BY CLICK POTENTIAL
+Rank 1–10 with one sentence on why each wins for my specific audience.
+
+---
+I am now going to paste my Loom transcript below — use it to generate all 50 title ideas.`;
+}
+function ddqPrompt(title, vault, vis, letter) {
+  return `You are a YouTube content strategist for a spiritual business coach.${ctx(vault, vis, letter)}
+
+My video title: "${title}"
+
+Generate 8 deep-dive questions to pull out ALL my expertise on this topic for a Loom recording.
+
+**Angle 1 — Personal story & lived experience** (Q1–3)
+**Angle 2 — Teaching & methodology** (Q4–6)
+**Angle 3 — Viewer transformation** (Q7–8)
+
+Make each conversational — easy to ramble on camera for 2-3 min. Number 1–8. Mark top 3 with ⭐`;
+}
+function scriptPrompt(title, transcript, vault, vis, letter, bbSlot, seriesSlot) {
+  const bbNote = bbSlot ? `\n🎯 BINGE BANK VIDEO ${bbSlot.n} ("${bbSlot.title}"): Deliver genuine value AND weave in one subtle reason why implementation is hard alone. Don't pitch — plant the seed.\n` : "";
+  const seriesNote = seriesSlot ? `\n📺 SERIES VIDEO ${seriesSlot.n} of "${seriesSlot.seriesTitle}": This sits in a larger series. Reference what came before if applicable. End with a natural bridge to the next video.\n` : "";
+  return `You are a YouTube scriptwriter for a spiritual business coach. Write in my voice — warm, direct, conversational, grounded. Never corporate.${ctx(vault, vis, letter)}
+
+My video title: "${title}"
+${bbNote}${seriesNote}
+My content transcript:
+"""
+${transcript}
+"""
+
+CRITICAL FORMATTING INSTRUCTION: Output this as a Google Doc-ready script. Use clean document formatting: large section titles in ALL CAPS, bold key phrases, stage directions in (parentheses and italics), and a clear visual divider line between each section. Do NOT use markdown symbols like ## or **. Write it so I can copy the entire output, paste it into a blank Google Doc, and it reads as a clean professional script document I can screenshare while recording. Big text, lots of breathing room, easy to scan at a glance from a distance.
+
+Output two things in order:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 1: COMPLETE SCRIPT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Format as a screen-share-ready script document. Every word written out — no placeholders. Bold the key phrases I need to land. Italicize stage directions like _[pause]_, _[breathe]_, _[face to camera]_. Use dividers between sections. Generous spacing. This is what I'm reading from on camera.
+
+# ${title}
+
+## 🎬 HOOK — Face to Camera · 20–30 sec
+[Curiosity gap or bold statement. No "hey guys welcome back." Make them need to keep watching. Write every word — no placeholders.]
+
+## ✦ PROOF — Face to Camera · 30–45 sec
+[Why I'm the right person to teach this. Specific credential, result, or lived experience. Confident, not braggy.]
+
+## 🎯 PROMISE — Face to Camera · 20–30 sec
+[Exactly what they'll learn and why it changes something for them.]
+
+## 🗺️ PLAN — Face to Camera · 15–20 sec
+[The 3–4 things we'll cover. Makes them feel safe to invest the next 10–20 minutes.]
+
+## 📖 CONTENT — Screenshare · 5–20 min
+[5 named sections. Each section: bold header, 3–5 teaching points written as full sentences I can read, one-line bridge to the next section.]
+
+## 🔑 CLOSE + CTA — Face to Camera · 30–45 sec
+[Warm, from the heart. Callback to the hook. Confident CTA — one clear next step and why they should take it now.]
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PART 2: THUMBNAIL CONCEPTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Based on the script above, create 4 thumbnail concepts using the Curiosity Gap framework. CRITICAL RULES:
+- Text on thumbnail must NEVER repeat the title — it must be additive (add scope, emotion, or curiosity)
+- Max 4 words of text. Bold sans-serif only. Position: right side.
+- Max 3 visual elements total
+- Before/After layouts: Before ALWAYS left, After ALWAYS right
+- Text must pass the glance test — readable on a phone in 2 seconds
+
+For each concept:
+
+**[TYPE] THUMBNAIL — e.g. RESULT / TRANSFORMATION / MOMENT / STORY / NOVELTY**
+📌 Curiosity gap this creates: [the question the viewer asks themselves]
+🎭 Main Character (hero element): [specific visual — what exactly to show]
+🔆 Supporting Element 1: [specific — what it is and why it supports]
+🔆 Supporting Element 2: [specific — or "none needed"]
+📐 Composition: [Symmetrical / Asymmetrical (which side) / A·B Split Screen]
+✍️ Thumbnail text (≤4 words, NOT the title): [the actual words]
+🎨 Color approach: [specific contrast — e.g. "desaturate before-state, vibrant lavender after-state"]
+⚡ Why this works: [one sentence]
+
+Make each concept meaningfully different — different curiosity gap type, different visual energy.
+
+---
+I am now going to paste my Deep Dive Loom transcript below — use it together with everything above to write the full script.`;
+}
+function repurposePrompt(type, title, script, vault, vis, letter) {
+  const c = ctx(vault, vis, letter);
+  const ps = {
+    blog: `Write a 600–900 word blog article for under this YouTube video in my Skool classroom. SEO-friendly. Hook opening. Ends with soft CTA to watch the video or join the community.${c}\n\nVIDEO TITLE: ${title}\nSCRIPT:\n${script}`,
+    skool: `Write a Skool community post sharing this video. Open with a personal story hook. 400–600 words. Warm, community-focused. Ends by inviting comments.${c}\n\nVIDEO TITLE: ${title}\nSCRIPT:\n${script.slice(0, 1500)}`,
+    ig: `Write an Instagram/Facebook caption. First line MUST stop the scroll — bold, specific, not starting with "I". Story-first. No bullet points. No em-dashes. 400–600 words. End with a question or soft CTA.${c}\n\nVIDEO TITLE: ${title}\nCONTENT:\n${script.slice(0, 1200)}`,
+    hooks: `Generate a HOOKS BANK — 15 short-form opening lines for Reels/TikToks.\n\nCuriosity Gap (3) · Identity/Avatar (3) · Contrarian (3) · Story Drop (3) · Transformation (3)\n\nEach hook: 1–2 sentences max. Stop-the-scroll energy.${c}\n\nVIDEO TITLE: ${title}\nCONTENT:\n${script.slice(0, 1200)}`
+  };
+  return ps[type];
+}
+function seriesConceptsPrompt(vault, vis, letter) {
+  return `You are a YouTube content strategist and series architect for a spiritual business coach.${ctx(vault, vis, letter)}
+
+Based on everything you know about this creator's business, audience, methodology, and brand — generate 5 distinct YouTube series concepts they could build.
+
+For each series:
+
+**Series [number]: [Series Title]**
+*The premise:* [1-2 sentences on what this series is about and why it's compelling]
+*Who it's for:* [specific viewer avatar]
+*Why this creator is uniquely qualified to make it:* [ties to their story, method, or proof]
+*The transformation arc:* [what a viewer believes/can do by the end of the series vs. the beginning]
+*Video 1 title:* [specific, complete, ready to use]
+*Video 2 title:* [specific, complete, ready to use]
+*Video 3 title:* [specific, complete, ready to use]
+*Video 4 title:* [specific, complete, ready to use]
+*Video 5 title:* [specific, complete, ready to use]
+*Video 6 title:* [specific, complete, ready to use]
+*Video 7 title:* [specific, complete, ready to use]
+
+Make each series meaningfully different — different audience stage, different content pillar, different format energy. These should feel like real opportunities, not generic ideas.`;
+}
+function seriesBuildoutPrompt(seriesTitle, premise, vault, vis, letter) {
+  return `You are a YouTube series architect for a spiritual business coach.${ctx(vault, vis, letter)}
+
+I'm building a YouTube series called: "${seriesTitle}"
+Premise: ${premise}
+
+Build out the complete series map — 7 videos:
+
+For each video:
+**Video [n]: [Complete Title]**
+*Pillar:* [Foundation / Transformation / Invitation]
+*Hook:* [The one-line hook that makes someone click]
+*Core teaching:* [What they'll learn — 2-3 sentences]
+*Objection this demolishes:* [The specific doubt or resistance this video removes]
+*Bridge to next video:* [One sentence teasing what comes next]
+*5 Loom questions to record this video:*
+1. [question]
+2. [question]
+3. [question]
+4. [question]
+5. [question]
+
+Make the series arc deliberate — by Video 7, the viewer should be pre-sold on working with this creator without ever feeling pitched to.`;
+}
+
+// ─── COMPONENTS ───────────────────────────────────────────────────────────────
+function Btn({
+  onClick,
+  children,
+  variant = "primary",
+  disabled,
+  small,
+  style = {}
+}) {
+  const base = {
+    border: "none",
+    cursor: "pointer",
+    borderRadius: 8,
+    fontFamily: FF,
+    fontWeight: 600,
+    transition: "all 0.18s",
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 6,
+    padding: small ? "6px 14px" : "11px 22px",
+    fontSize: small ? 11 : 13,
+    opacity: disabled ? 0.4 : 1,
+    pointerEvents: disabled ? "none" : "auto"
+  };
+  const v = {
+    primary: {
+      background: `linear-gradient(135deg,${C.violet},${C.pink})`,
+      color: "#fff",
+      boxShadow: `0 4px 16px rgba(123,94,167,0.22)`
+    },
+    ghost: {
+      background: "rgba(255,255,255,0.8)",
+      color: C.violet,
+      border: `1px solid ${C.border}`
+    },
+    muted: {
+      background: C.surfaceHigh,
+      color: C.muted,
+      border: `1px solid ${C.border}`
+    },
+    mint: {
+      background: C.mintDim,
+      color: C.mint,
+      border: `1px solid rgba(61,158,140,0.3)`
+    },
+    danger: {
+      background: "#FEF2F2",
+      color: C.red,
+      border: "1px solid #FECACA"
+    }
+  };
+  return /*#__PURE__*/React.createElement("button", {
+    onClick: onClick,
+    disabled: disabled,
+    style: {
+      ...base,
+      ...v[variant],
+      ...style
+    }
+  }, children);
+}
+function Tag({
+  children,
+  color = C.violet,
+  small
+}) {
+  return /*#__PURE__*/React.createElement("span", {
+    style: {
+      background: color + "14",
+      border: `1px solid ${color}30`,
+      color,
+      borderRadius: 100,
+      padding: small ? "2px 9px" : "4px 11px",
+      fontSize: small ? 9 : 10,
+      fontWeight: 600,
+      letterSpacing: 1,
+      textTransform: "uppercase",
+      fontFamily: FF
+    }
+  }, children);
+}
+function Card({
+  children,
+  style = {},
+  glow,
+  onClick
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    onClick: onClick,
+    style: {
+      background: C.surface,
+      border: `1px solid ${glow ? C.borderGlow : C.border}`,
+      borderRadius: 16,
+      padding: "20px 22px",
+      boxShadow: glow ? `0 4px 24px rgba(123,94,167,0.12)` : `0 1px 8px rgba(100,80,160,0.05)`,
+      cursor: onClick ? "pointer" : "default",
+      ...style
+    }
+  }, children);
+}
+function Muted({
+  children,
+  style = {}
+}) {
+  return /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: C.muted,
+      fontSize: 13,
+      lineHeight: 1.7,
+      margin: 0,
+      fontFamily: FF,
+      ...style
+    }
+  }, children);
+}
+function Label({
+  children,
+  color = C.lavDim,
+  style = {}
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: FF,
+      fontWeight: 600,
+      fontSize: 10,
+      letterSpacing: 2,
+      textTransform: "uppercase",
+      color,
+      marginBottom: 10,
+      ...style
+    }
+  }, children);
+}
+function H({
+  children,
+  size = 20
+}) {
+  return /*#__PURE__*/React.createElement("h2", {
+    style: {
+      fontFamily: FF,
+      color: C.lavLight,
+      fontSize: size,
+      margin: "0 0 6px",
+      fontWeight: 700,
+      letterSpacing: -0.3,
+      lineHeight: 1.25
+    }
+  }, children);
+}
+function TA({
+  value,
+  onChange,
+  rows = 6,
+  placeholder,
+  style = {}
+}) {
+  return /*#__PURE__*/React.createElement("textarea", {
+    value: value,
+    onChange: onChange,
+    rows: rows,
+    placeholder: placeholder,
+    style: {
+      width: "100%",
+      background: C.surfaceHigh,
+      border: `1px solid ${C.border}`,
+      borderRadius: 12,
+      color: C.cream,
+      padding: "13px 15px",
+      fontSize: 13,
+      lineHeight: 1.65,
+      outline: "none",
+      fontFamily: FF,
+      resize: "vertical",
+      ...style
+    }
+  });
+}
+function CopyBtn({
+  text,
+  label = "Copy"
+}) {
+  const [done, setDone] = (0, React.useState)(false);
+  const [err, setErr] = (0, React.useState)(false);
+  const doCopy = () => {
+    const ok = () => {
+      setDone(true);
+      setErr(false);
+      setTimeout(() => setDone(false), 2500);
+    };
+    const fail = () => {
+      setErr(true);
+      setTimeout(() => setErr(false), 2500);
+    };
+    function fb() {
+      try {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.cssText = "position:fixed;top:0;left:0;opacity:0;pointer-events:none;";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        const r = document.execCommand("copy");
+        document.body.removeChild(ta);
+        r ? ok() : fail();
+      } catch {
+        fail();
+      }
+    }
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(ok).catch(fb);
+    } else {
+      fb();
+    }
+  };
+  return /*#__PURE__*/React.createElement(Btn, {
+    small: true,
+    variant: done ? "mint" : err ? "danger" : "muted",
+    onClick: doCopy
+  }, done ? "✓ Copied" : err ? "Failed — try again" : label);
+}
+async function extractPDF(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = async e => {
+      try {
+        if (!window.pdfjsLib) {
+          const s = document.createElement("script");
+          s.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+          await new Promise((res, rej) => {
+            s.onload = res;
+            s.onerror = rej;
+            document.head.appendChild(s);
+          });
+          window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+        }
+        const pdf = await window.pdfjsLib.getDocument({
+          data: new Uint8Array(e.target.result)
+        }).promise;
+        let text = "";
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const pg = await pdf.getPage(i);
+          const c = await pg.getTextContent();
+          text += c.items.map(s => s.str).join(" ") + "\n\n";
+        }
+        resolve(text.trim());
+      } catch (err) {
+        reject(err);
+      }
+    };
+    reader.onerror = () => reject(new Error("Read failed"));
+    reader.readAsArrayBuffer(file);
+  });
+}
+function UploadZone({
+  onText,
+  label = "Drop file or click to browse"
+}) {
+  const [dragging, setDragging] = (0, React.useState)(false);
+  const [fileName, setFileName] = (0, React.useState)("");
+  const [err, setErr] = (0, React.useState)("");
+  const [busy, setBusy] = (0, React.useState)(false);
+  const ref = (0, React.useRef)();
+  const readFile = async file => {
+    setErr("");
+    setFileName(file.name);
+    setBusy(true);
+    try {
+      if (file.name.toLowerCase().endsWith(".pdf")) {
+        const t = await extractPDF(file);
+        if (t.trim()) {
+          onText(t);
+        } else {
+          setErr("PDF appears empty or image-only. Paste the text instead.");
+        }
+      } else {
+        const r = new FileReader();
+        r.onload = e => {
+          if (typeof e.target.result === "string" && e.target.result.trim()) {
+            onText(e.target.result);
+          } else {
+            setErr("Could not read file.");
+          }
+        };
+        r.onerror = () => setErr("Error reading file.");
+        r.readAsText(file);
+      }
+    } catch {
+      setErr("Could not extract text. Please paste instead.");
+    }
+    setBusy(false);
+  };
+  return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    className: `upload-zone${dragging ? " drag-over" : ""}`,
+    onDragOver: e => {
+      e.preventDefault();
+      setDragging(true);
+    },
+    onDragLeave: () => setDragging(false),
+    onDrop: e => {
+      e.preventDefault();
+      setDragging(false);
+      const f = e.dataTransfer.files[0];
+      if (f) readFile(f);
+    },
+    onClick: () => !busy && ref.current?.click(),
+    style: {
+      border: `2px dashed ${dragging ? C.violet : C.border}`,
+      borderRadius: 12,
+      padding: "18px",
+      textAlign: "center",
+      cursor: busy ? "wait" : "pointer",
+      background: C.surfaceHigh,
+      transition: "all 0.2s"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 20,
+      marginBottom: 4
+    }
+  }, busy ? "⏳" : "📄"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.violet,
+      fontWeight: 600,
+      fontSize: 13,
+      fontFamily: FF,
+      marginBottom: 2
+    }
+  }, busy ? "Extracting…" : fileName ? `✓ ${fileName}` : label), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.muted,
+      fontSize: 11,
+      fontFamily: FF
+    }
+  }, fileName && !busy ? "Click to replace" : "PDF · TXT · MD · DOC · DOCX"), /*#__PURE__*/React.createElement("input", {
+    ref: ref,
+    type: "file",
+    accept: ".pdf,.txt,.md,.doc,.docx",
+    style: {
+      display: "none"
+    },
+    onChange: e => {
+      if (e.target.files[0]) readFile(e.target.files[0]);
+    }
+  })), err && /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.red,
+      fontSize: 12,
+      marginTop: 6,
+      fontFamily: FF
+    }
+  }, err));
+}
+function PromptBox({
+  prompt,
+  label = "Copy prompt → open Claude.ai → paste → bring the result back"
+}) {
+  return /*#__PURE__*/React.createElement(Card, {
+    glow: true,
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Label, {
+    color: C.violet,
+    style: {
+      marginBottom: 4
+    }
+  }, "Your Claude Prompt"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, label)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      flexShrink: 0,
+      marginLeft: 12
+    }
+  }, /*#__PURE__*/React.createElement(CopyBtn, {
+    text: prompt,
+    label: "\u2726 Copy Prompt"
+  }), /*#__PURE__*/React.createElement("a", {
+    href: "https://claude.ai/new",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 5,
+      padding: "6px 13px",
+      borderRadius: 8,
+      background: `linear-gradient(135deg,${C.violet},${C.pink})`,
+      color: "#fff",
+      fontSize: 11,
+      fontWeight: 600,
+      fontFamily: FF,
+      textDecoration: "none"
+    }
+  }, "Claude \u2197"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.surfaceHigh,
+      borderRadius: 10,
+      padding: "10px 13px",
+      maxHeight: 140,
+      overflowY: "auto",
+      border: `1px solid ${C.border}`
+    }
+  }, /*#__PURE__*/React.createElement("pre", {
+    style: {
+      color: C.muted,
+      fontSize: 11,
+      lineHeight: 1.65,
+      margin: 0,
+      whiteSpace: "pre-wrap",
+      fontFamily: FM
+    }
+  }, prompt.slice(0, 600), "\u2026")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 6,
+      fontSize: 10,
+      color: C.lavDim,
+      fontFamily: FF
+    }
+  }, "\u2191 Preview only \u2014 full prompt copies on click"));
+}
+function StepNav({
+  steps,
+  current,
+  onStep
+}) {
+  if (!steps || steps.length === 0) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 0,
+      marginTop: 14,
+      borderRadius: 12,
+      overflow: "hidden",
+      border: `1px solid ${C.border}`,
+      background: C.surfaceHigh
+    }
+  }, steps.map((s, i) => {
+    const active = s.id === current;
+    return /*#__PURE__*/React.createElement("button", {
+      key: s.id,
+      onClick: () => onStep(s.id),
+      style: {
+        flex: 1,
+        border: "none",
+        background: active ? `linear-gradient(135deg,${C.violet},${C.pink})` : "transparent",
+        color: active ? "#fff" : C.muted,
+        padding: "9px 4px",
+        cursor: "pointer",
+        fontFamily: FF,
+        fontSize: 10,
+        fontWeight: active ? 700 : 500,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 3,
+        transition: "all 0.15s",
+        borderRight: i < steps.length - 1 ? `1px solid ${C.border}` : "none"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: 14
+      }
+    }, s.icon), /*#__PURE__*/React.createElement("span", {
+      style: {
+        letterSpacing: 0.3,
+        lineHeight: 1.2,
+        textAlign: "center"
+      }
+    }, s.label));
+  }));
+}
+function Shell({
+  children,
+  onBack,
+  backLabel,
+  title,
+  sub,
+  onSettings,
+  steps,
+  currentStep,
+  onStep
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.bg,
+      minHeight: "100vh",
+      fontFamily: FF
+    }
+  }, /*#__PURE__*/React.createElement("style", null, GLOBAL_CSS), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "linear-gradient(135deg,#EDE6FF 0%,#F3E8FF 40%,#E8EEFF 100%)",
+      backgroundSize: "200% 200%",
+      animation: "holoFlow 14s ease infinite",
+      borderBottom: `1px solid ${C.border}`,
+      padding: "14px 24px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 800,
+      margin: "0 auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, onBack && /*#__PURE__*/React.createElement("button", {
+    onClick: onBack,
+    style: {
+      background: "none",
+      border: "none",
+      color: C.lavDim,
+      fontSize: 12,
+      cursor: "pointer",
+      padding: 0,
+      marginBottom: 8,
+      fontFamily: FF,
+      fontWeight: 500,
+      display: "flex",
+      alignItems: "center",
+      gap: 5
+    }
+  }, "\u2190 ", backLabel), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "flex-start",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.lavDim,
+      fontSize: 11,
+      marginTop: 3
+    }
+  }, "\u2726"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: FF,
+      fontSize: 9,
+      letterSpacing: 3,
+      textTransform: "uppercase",
+      color: C.lavDim,
+      fontWeight: 600,
+      marginBottom: 3
+    }
+  }, "YouTube Content Studio"), /*#__PURE__*/React.createElement(H, {
+    size: 17
+  }, title), sub && /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      marginTop: 1,
+      fontSize: 12
+    }
+  }, sub), steps && /*#__PURE__*/React.createElement(StepNav, {
+    steps: steps,
+    current: currentStep,
+    onStep: onStep
+  })))), onSettings && /*#__PURE__*/React.createElement("button", {
+    onClick: onSettings,
+    style: {
+      background: "rgba(255,255,255,0.6)",
+      border: `1px solid ${C.border}`,
+      borderRadius: 8,
+      padding: "7px 13px",
+      fontSize: 12,
+      color: C.muted,
+      cursor: "pointer",
+      fontFamily: FF,
+      fontWeight: 500,
+      backdropFilter: "blur(8px)",
+      marginLeft: 12,
+      flexShrink: 0
+    }
+  }, "\u2699\uFE0F")))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 800,
+      margin: "0 auto",
+      padding: "24px 20px 100px"
+    }
+  }, children));
+}
+
+// ─── STEP DEFINITIONS ────────────────────────────────────────────────────────
+const BINGE_STEPS = [{
+  id: "binge-map",
+  icon: "🎬",
+  label: "Pick Video"
+}, {
+  id: "binge-loom",
+  icon: "🎙️",
+  label: "Record"
+}, {
+  id: "titles",
+  icon: "📝",
+  label: "Titles"
+}, {
+  id: "deepdive",
+  icon: "🎯",
+  label: "Deep Dive"
+}, {
+  id: "script",
+  icon: "📄",
+  label: "Script"
+}, {
+  id: "production",
+  icon: "🎬",
+  label: "Publish"
+}];
+const WEEKLY_STEPS = [{
+  id: "input",
+  icon: "💡",
+  label: "Input"
+}, {
+  id: "titles",
+  icon: "📝",
+  label: "Titles"
+}, {
+  id: "deepdive",
+  icon: "🎯",
+  label: "Deep Dive"
+}, {
+  id: "script",
+  icon: "📄",
+  label: "Script"
+}, {
+  id: "production",
+  icon: "🎬",
+  label: "Publish"
+}];
+const SERIES_STEPS = [{
+  id: "series-builder",
+  icon: "📺",
+  label: "Concepts"
+}, {
+  id: "series-map",
+  icon: "🗺️",
+  label: "Series Map"
+}, {
+  id: "input",
+  icon: "💡",
+  label: "Input"
+}, {
+  id: "titles",
+  icon: "📝",
+  label: "Titles"
+}, {
+  id: "deepdive",
+  icon: "🎯",
+  label: "Deep Dive"
+}, {
+  id: "script",
+  icon: "📄",
+  label: "Script"
+}, {
+  id: "production",
+  icon: "🎬",
+  label: "Publish"
+}];
+
+// ─── STORAGE (localStorage for browser deployment) ───────────────────────────
+const save = async (k, v) => {
+  try {
+    localStorage.setItem(k, JSON.stringify(v));
+  } catch {}
+};
+const load = async k => {
+  try {
+    const r = localStorage.getItem(k);
+    return r ? JSON.parse(r) : null;
+  } catch {
+    return null;
+  }
+};
+
+// ─── APP ──────────────────────────────────────────────────────────────────────
+function App() {
+  const [screen, setScreen] = (0, React.useState)("home");
+  const [vault, setVault] = (0, React.useState)("");
+  const [vaultOk, setVaultOk] = (0, React.useState)(false);
+  const [vis, setVis] = (0, React.useState)("");
+  const [visOk, setVisOk] = (0, React.useState)(false);
+  const [letter, setLetter] = (0, React.useState)("");
+  const [letterOk, setLetterOk] = (0, React.useState)(false);
+
+  // path state
+  const [mode, setMode] = (0, React.useState)(null); // "binge" | "weekly" | "series"
+  const [bbSlot, setBBSlot] = (0, React.useState)(null);
+  const [seriesMap, setSeriesMap] = (0, React.useState)(null); // built-out series
+  const [seriesSlot, setSeriesSlot] = (0, React.useState)(null); // which video in series
+  const [inputType, setInputType] = (0, React.useState)(null);
+  const [qOff, setQOff] = (0, React.useState)(0);
+
+  // per-video state
+  const [transcript, setT] = (0, React.useState)("");
+  const [titleBank, setTitleBank] = (0, React.useState)("");
+  const [title, setTitle] = (0, React.useState)("");
+  const [ddqOut, setDdqOut] = (0, React.useState)("");
+  const [ddT, setDDT] = (0, React.useState)("");
+  const [script, setScript] = (0, React.useState)("");
+  const [repurpose, setRp] = (0, React.useState)({});
+
+  // series builder state
+  const [seriesConcepts, setSeriesConcepts] = (0, React.useState)("");
+  const [pickedSeries, setPickedSeries] = (0, React.useState)({
+    title: "",
+    premise: ""
+  });
+  const [seriesBuildout, setSeriesBuildout] = (0, React.useState)("");
+
+  // brain build
+  const [brainDoc, setBrainDoc] = (0, React.useState)("");
+  const [brainSaved, setBrainSaved] = (0, React.useState)(false);
+  (0, React.useEffect)(() => {
+    (async () => {
+      const v = await load("vault");
+      if (v) {
+        setVault(v);
+        setVaultOk(true);
+      }
+      const vi = await load("vis");
+      if (vi) {
+        setVis(vi);
+        setVisOk(true);
+      }
+      const lt = await load("letter");
+      if (lt) {
+        setLetter(lt);
+        setLetterOk(true);
+      }
+    })();
+  }, []);
+  const reset = () => {
+    setT("");
+    setTitleBank("");
+    setTitle("");
+    setDdqOut("");
+    setDDT("");
+    setScript("");
+    setRp({});
+    setInputType(null);
+  };
+
+  // step nav helpers
+  const activeSteps = mode === "binge" ? BINGE_STEPS : mode === "series" ? SERIES_STEPS : mode === "weekly" ? WEEKLY_STEPS : [];
+  const navToStep = id => {
+    // for binge-loom we need bbSlot set — guard
+    if (id === "binge-loom" && !bbSlot) return;
+    setScreen(id);
+  };
+
+  // ── HOME ──────────────────────────────────────────────────────────────────
+  if (screen === "home") return /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.bg,
+      minHeight: "100vh",
+      fontFamily: FF,
+      paddingBottom: 80
+    }
+  }, /*#__PURE__*/React.createElement("style", null, GLOBAL_CSS), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "linear-gradient(135deg,#EDE6FF 0%,#F3E8FF 25%,#EEE8FF 50%,#E8EEFF 75%,#EDE6FF 100%)",
+      backgroundSize: "300% 300%",
+      animation: "holoFlow 14s ease infinite",
+      borderBottom: `1px solid ${C.border}`,
+      padding: "40px 24px 34px",
+      textAlign: "center",
+      position: "relative",
+      overflow: "hidden"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      width: 200,
+      height: 200,
+      borderRadius: "50%",
+      background: "radial-gradient(circle,#C9B8EE22,transparent 70%)",
+      top: -50,
+      left: -30,
+      animation: "orb 9s ease-in-out infinite",
+      pointerEvents: "none"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "absolute",
+      width: 160,
+      height: 160,
+      borderRadius: "50%",
+      background: "radial-gradient(circle,#D4C5F922,transparent 70%)",
+      bottom: -30,
+      right: -20,
+      animation: "orb 11s ease-in-out infinite reverse",
+      pointerEvents: "none"
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: "relative"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 8,
+      marginBottom: 16,
+      padding: "5px 14px",
+      borderRadius: 100,
+      background: "rgba(255,255,255,0.72)",
+      backdropFilter: "blur(12px)",
+      border: `1px solid rgba(180,160,230,0.4)`
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      color: C.lavDim
+    }
+  }, "\u2726"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: FF,
+      fontSize: 9,
+      fontWeight: 600,
+      letterSpacing: 3.5,
+      textTransform: "uppercase",
+      color: C.lavDim
+    }
+  }, "CEO By Design \xB7 Visibility By Design"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 10,
+      color: C.lavDim
+    }
+  }, "\u2726")), /*#__PURE__*/React.createElement("h1", {
+    style: {
+      fontFamily: FF,
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 26,
+      margin: "0 0 8px",
+      letterSpacing: -0.5
+    }
+  }, "YouTube Content Studio"), /*#__PURE__*/React.createElement("p", {
+    style: {
+      color: C.muted,
+      fontSize: 13,
+      margin: "0 0 16px",
+      fontStyle: "italic"
+    }
+  }, "Build prompts that write your channel \u2014 in your voice, every time"), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setScreen("settings"),
+    style: {
+      background: "rgba(255,255,255,0.6)",
+      border: `1px solid ${C.border}`,
+      borderRadius: 8,
+      padding: "6px 14px",
+      fontSize: 11,
+      color: C.muted,
+      cursor: "pointer",
+      fontFamily: FF,
+      fontWeight: 500,
+      backdropFilter: "blur(8px)"
+    }
+  }, "\u2699\uFE0F Settings (Visibility + Letter)"))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 800,
+      margin: "0 auto",
+      padding: "24px 20px"
+    }
+  }, /*#__PURE__*/React.createElement(Card, {
+    glow: !vaultOk,
+    style: {
+      marginBottom: 24,
+      animation: "fadeUp 0.3s"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      alignItems: "center",
+      marginBottom: 6
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 16
+    }
+  }, "\u2726"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: FF,
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 16
+    }
+  }, "Your Business Brain"), vaultOk ? /*#__PURE__*/React.createElement(Tag, {
+    color: C.green,
+    small: true
+  }, "Loaded") : /*#__PURE__*/React.createElement(Tag, {
+    color: C.gold,
+    small: true
+  }, "Required \u2014 Start Here")), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      marginBottom: vaultOk ? 0 : 14
+    }
+  }, vaultOk ? "Your Master AI Context Doc is loaded. Every prompt in this studio is written as you — your voice, audience, and methodology." : "Build this once. It bakes your voice, audience, methodology, and proof points into every single prompt you generate. Without it, outputs are generic.")), vaultOk && /*#__PURE__*/React.createElement(Btn, {
+    small: true,
+    variant: "ghost",
+    style: {
+      marginLeft: 12,
+      flexShrink: 0
+    },
+    onClick: () => {
+      setVaultOk(false);
+      setVault("");
+      save("vault", "");
+    }
+  }, "Remove")), !vaultOk && /*#__PURE__*/React.createElement(Btn, {
+    onClick: () => setScreen("brain-build")
+  }, "Build Your Business Brain \u2192")), /*#__PURE__*/React.createElement(Label, null, "Choose Your Path"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr 1fr",
+      gap: 12,
+      marginBottom: 8
+    }
+  }, [{
+    id: "binge",
+    icon: "🎬",
+    label: "Binge Bank",
+    sub: "New to YouTube — start here",
+    desc: "Your 7-video authority series. Pre-sells your offer before you ever pitch. Becomes your Skool Start Here module.",
+    color: C.violet
+  }, {
+    id: "weekly",
+    icon: "💡",
+    label: "Weekly Video",
+    sub: "Ongoing content machine",
+    desc: "Turn a brain dump, coaching call, short-form post, or story into a complete video — titles, script, and thumbnails.",
+    color: C.pink
+  }, {
+    id: "series",
+    icon: "📺",
+    label: "Build a Series",
+    sub: "Established creators",
+    desc: "Generate 5 custom series concepts from your Business Brain, pick one, and build out all 7 videos.",
+    color: C.mint
+  }].map(p => /*#__PURE__*/React.createElement("button", {
+    key: p.id,
+    onClick: () => {
+      if (!vaultOk) {
+        alert("Load your Business Brain first — it powers every prompt in this studio.");
+      } else {
+        setMode(p.id);
+        reset();
+        setScreen(p.id === "binge" ? "binge-map" : p.id === "series" ? "series-builder" : "input");
+      }
+    },
+    style: {
+      background: C.surfaceHigh,
+      border: `1.5px solid ${C.border}`,
+      borderRadius: 12,
+      padding: "24px 20px",
+      textAlign: "left",
+      cursor: "pointer",
+      transition: "all 0.2s",
+      fontFamily: FF
+    },
+    onMouseEnter: e => {
+      e.currentTarget.style.border = `1.5px solid ${p.color}`;
+      e.currentTarget.style.boxShadow = `0 0 20px ${p.color}22`;
+    },
+    onMouseLeave: e => {
+      e.currentTarget.style.border = `1.5px solid ${C.border}`;
+      e.currentTarget.style.boxShadow = "none";
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 28,
+      marginBottom: 10
+    }
+  }, p.icon), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: C.cream,
+      fontSize: 15,
+      marginBottom: 3
+    }
+  }, p.label), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: p.color,
+      fontSize: 9,
+      fontWeight: 700,
+      letterSpacing: 1.5,
+      textTransform: "uppercase",
+      marginBottom: 10
+    }
+  }, p.sub), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.muted,
+      fontSize: 12,
+      lineHeight: 1.6
+    }
+  }, p.desc)))), !vaultOk && /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 11,
+      textAlign: "center",
+      marginTop: 8
+    }
+  }, "\u26A0\uFE0F Load your Business Brain first to unlock all paths")));
+
+  // ── SETTINGS ──────────────────────────────────────────────────────────────
+  if (screen === "settings") return /*#__PURE__*/React.createElement(Shell, {
+    onBack: () => setScreen("home"),
+    backLabel: "Home",
+    title: "Settings",
+    sub: "Optional context \u2014 adds energetic depth to every prompt"
+  }, /*#__PURE__*/React.createElement(Card, {
+    style: {
+      marginBottom: 16
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "\u2726"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: FF,
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 15
+    }
+  }, "Visibility By Design Report"), visOk && /*#__PURE__*/React.createElement(Tag, {
+    color: C.mint,
+    small: true
+  }, "Loaded")), visOk && /*#__PURE__*/React.createElement(Btn, {
+    small: true,
+    variant: "ghost",
+    onClick: () => {
+      setVisOk(false);
+      setVis("");
+      save("vis", "");
+    }
+  }, "Remove")), !visOk ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      marginBottom: 10
+    }
+  }, "Your personalised HD reading. Aligns content with your energy type, visibility mantra, and design themes."), /*#__PURE__*/React.createElement(UploadZone, {
+    onText: t => setVis(t),
+    label: "Upload Visibility Report (PDF, TXT, DOC)"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      margin: "10px 0 4px"
+    }
+  }, /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 11
+    }
+  }, "\u2014 or paste directly \u2014")), /*#__PURE__*/React.createElement(TA, {
+    value: vis,
+    onChange: e => setVis(e.target.value),
+    rows: 3,
+    placeholder: "Paste your Visibility By Design report here..."
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 10
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    variant: "ghost",
+    onClick: async () => {
+      await save("vis", vis);
+      setVisOk(true);
+    },
+    disabled: !vis.trim()
+  }, "Save Report"))) : /*#__PURE__*/React.createElement(Muted, null, "Report loaded. Content will align with your energy type and visibility mantra.")), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      alignItems: "center"
+    }
+  }, /*#__PURE__*/React.createElement("span", null, "\u2726"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontFamily: FF,
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 15
+    }
+  }, "Letter from Higher Self"), letterOk && /*#__PURE__*/React.createElement(Tag, {
+    color: C.pink,
+    small: true
+  }, "Loaded")), letterOk && /*#__PURE__*/React.createElement(Btn, {
+    small: true,
+    variant: "ghost",
+    onClick: () => {
+      setLetterOk(false);
+      setLetter("");
+      save("letter", "");
+    }
+  }, "Remove")), !letterOk ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      marginBottom: 10
+    }
+  }, "The letter from Day 1 of the challenge. Informs the energetic tone and deeper purpose behind every piece of content."), /*#__PURE__*/React.createElement(UploadZone, {
+    onText: t => setLetter(t),
+    label: "Upload Letter (PDF, TXT, DOC)"
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      margin: "10px 0 4px"
+    }
+  }, /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 11
+    }
+  }, "\u2014 or paste directly \u2014")), /*#__PURE__*/React.createElement(TA, {
+    value: letter,
+    onChange: e => setLetter(e.target.value),
+    rows: 3,
+    placeholder: "Paste your Letter from Higher Self here..."
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 10
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    variant: "ghost",
+    onClick: async () => {
+      await save("letter", letter);
+      setLetterOk(true);
+    },
+    disabled: !letter.trim()
+  }, "Save Letter"))) : /*#__PURE__*/React.createElement(Muted, null, "Letter loaded. Content will carry the energetic intention behind your work.")));
+
+  // ── BRAIN BUILD ───────────────────────────────────────────────────────────
+  if (screen === "brain-build") {
+    const allQs = BRAIN_BUILD_QUESTIONS.flatMap(s => s.qs);
+    return /*#__PURE__*/React.createElement(Shell, {
+      onBack: () => setScreen("home"),
+      backLabel: "Home",
+      title: "Build Your Business Brain",
+      sub: "Record on Loom \xB7 Compile in Claude \xB7 Paste back"
+    }, /*#__PURE__*/React.createElement(Card, {
+      style: {
+        marginBottom: 14
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 14
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 10,
+        alignItems: "flex-start"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 26,
+        height: 26,
+        borderRadius: "50%",
+        background: `linear-gradient(135deg,${C.violet},${C.pink})`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#fff",
+        fontWeight: 700,
+        fontSize: 12,
+        flexShrink: 0
+      }
+    }, "1"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: FF,
+        fontWeight: 700,
+        color: C.lavLight,
+        fontSize: 14,
+        marginBottom: 3
+      }
+    }, "Record your Loom \u2014 answer these 8 questions"), /*#__PURE__*/React.createElement(Muted, {
+      style: {
+        fontSize: 12
+      }
+    }, "Camera only. Ramble freely. 15\u201325 min. Download the auto-transcript when done."))), /*#__PURE__*/React.createElement(CopyBtn, {
+      text: allQs.map((q, i) => `${i + 1}. ${q}`).join("\n\n"),
+      label: "Copy All 8"
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        paddingLeft: 36
+      }
+    }, BRAIN_BUILD_QUESTIONS.map((section, si) => /*#__PURE__*/React.createElement("div", {
+      key: si,
+      style: {
+        marginTop: si > 0 ? 14 : 0
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 9,
+        fontWeight: 700,
+        letterSpacing: 1.5,
+        textTransform: "uppercase",
+        color: [C.violet, C.pink][si],
+        marginBottom: 8
+      }
+    }, section.section), section.qs.map((q, qi) => {
+      const n = BRAIN_BUILD_QUESTIONS.slice(0, si).reduce((a, s) => a + s.qs.length, 0) + qi + 1;
+      return /*#__PURE__*/React.createElement("div", {
+        key: qi,
+        style: {
+          display: "flex",
+          gap: 10,
+          alignItems: "flex-start",
+          marginBottom: 8
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          minWidth: 20,
+          height: 20,
+          borderRadius: 5,
+          background: C.surfaceHigh,
+          border: `1px solid ${C.border}`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          color: C.muted,
+          fontWeight: 700,
+          fontSize: 10,
+          flexShrink: 0
+        }
+      }, n), /*#__PURE__*/React.createElement("div", {
+        style: {
+          color: C.cream,
+          fontSize: 13,
+          lineHeight: 1.6
+        }
+      }, q));
+    }))))), /*#__PURE__*/React.createElement(Card, {
+      style: {
+        marginBottom: 14
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "flex-start",
+        marginBottom: 10
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 10,
+        alignItems: "flex-start"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 26,
+        height: 26,
+        borderRadius: "50%",
+        background: `linear-gradient(135deg,${C.violet},${C.pink})`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#fff",
+        fontWeight: 700,
+        fontSize: 12,
+        flexShrink: 0
+      }
+    }, "2"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: FF,
+        fontWeight: 700,
+        color: C.lavLight,
+        fontSize: 14,
+        marginBottom: 3
+      }
+    }, "Compile in a separate Claude chat"), /*#__PURE__*/React.createElement(Muted, {
+      style: {
+        fontSize: 12
+      }
+    }, "Copy prompt \u2192 open Claude.ai \u2192 paste \u2192 replace ", /*#__PURE__*/React.createElement("em", {
+      style: {
+        color: C.violet
+      }
+    }, "[PASTE YOUR LOOM TRANSCRIPT HERE]"), " with your transcript \u2192 copy the full response."))), /*#__PURE__*/React.createElement(CopyBtn, {
+      text: MASTER_BRAIN_PROMPT,
+      label: "\u2726 Copy Prompt"
+    })), /*#__PURE__*/React.createElement("div", {
+      style: {
+        paddingLeft: 36
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: C.surfaceHigh,
+        borderRadius: 10,
+        padding: "10px 13px",
+        maxHeight: 130,
+        overflowY: "auto",
+        border: `1px solid ${C.border}`,
+        marginBottom: 10
+      }
+    }, /*#__PURE__*/React.createElement("pre", {
+      style: {
+        color: C.muted,
+        fontSize: 11,
+        lineHeight: 1.65,
+        margin: 0,
+        whiteSpace: "pre-wrap",
+        fontFamily: FM
+      }
+    }, MASTER_BRAIN_PROMPT.slice(0, 500), "\u2026")), /*#__PURE__*/React.createElement("a", {
+      href: "https://claude.ai/new",
+      target: "_blank",
+      rel: "noopener noreferrer",
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        padding: "7px 16px",
+        borderRadius: 8,
+        background: `linear-gradient(135deg,${C.violet},${C.pink})`,
+        color: "#fff",
+        fontSize: 12,
+        fontWeight: 600,
+        fontFamily: FF,
+        textDecoration: "none"
+      }
+    }, "Open Claude.ai \u2197"))), /*#__PURE__*/React.createElement(Card, {
+      glow: true
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 10,
+        alignItems: "flex-start",
+        marginBottom: 12
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 26,
+        height: 26,
+        borderRadius: "50%",
+        background: `linear-gradient(135deg,${C.violet},${C.pink})`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: "#fff",
+        fontWeight: 700,
+        fontSize: 12,
+        flexShrink: 0
+      }
+    }, "3"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontFamily: FF,
+        fontWeight: 700,
+        color: C.lavLight,
+        fontSize: 14,
+        marginBottom: 3
+      }
+    }, "Paste your completed Business Brain back here"), /*#__PURE__*/React.createElement(Muted, {
+      style: {
+        fontSize: 12
+      }
+    }, "Upload the file or paste \u2014 either works."))), !brainSaved ? /*#__PURE__*/React.createElement("div", {
+      style: {
+        paddingLeft: 36
+      }
+    }, /*#__PURE__*/React.createElement(UploadZone, {
+      onText: t => setBrainDoc(t),
+      label: "Upload Business Brain (PDF, TXT, DOC)"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        margin: "10px 0 4px"
+      }
+    }, /*#__PURE__*/React.createElement(Muted, {
+      style: {
+        fontSize: 11
+      }
+    }, "\u2014 or paste directly \u2014")), /*#__PURE__*/React.createElement(TA, {
+      value: brainDoc,
+      onChange: e => setBrainDoc(e.target.value),
+      rows: 8,
+      placeholder: "Paste your complete MASTER BUSINESS BRAIN here\u2026"
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 12
+      }
+    }, /*#__PURE__*/React.createElement(Btn, {
+      onClick: async () => {
+        if (!brainDoc.trim()) return;
+        await save("vault", brainDoc);
+        setVault(brainDoc);
+        setVaultOk(true);
+        setBrainSaved(true);
+      },
+      disabled: !brainDoc.trim()
+    }, "\u2726 Save My Business Brain \u2192"))) : /*#__PURE__*/React.createElement("div", {
+      style: {
+        paddingLeft: 36
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: `linear-gradient(135deg,${C.green}10,${C.mintDim})`,
+        border: `1px solid ${C.green}44`,
+        borderRadius: 12,
+        padding: "16px 18px"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        color: C.green,
+        fontWeight: 700,
+        fontSize: 14,
+        marginBottom: 6
+      }
+    }, "\u2726 Business Brain saved"), /*#__PURE__*/React.createElement(Muted, {
+      style: {
+        marginBottom: 12
+      }
+    }, "Every prompt in this studio is now personalised to your brand, voice, and audience."), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        gap: 10
+      }
+    }, /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => setScreen("home")
+    }, "\u2190 Back to Studio"), /*#__PURE__*/React.createElement(Btn, {
+      variant: "ghost",
+      onClick: () => {
+        setBrainSaved(false);
+        setBrainDoc("");
+      }
+    }, "Replace"))))));
+  }
+
+  // ── BINGE MAP ─────────────────────────────────────────────────────────────
+  if (screen === "binge-map") return /*#__PURE__*/React.createElement(Shell, {
+    onBack: () => setScreen("home"),
+    backLabel: "Home",
+    title: "Your Binge Bank",
+    sub: "7 videos \xB7 Start Here course \xB7 Pre-sells your offer",
+    onSettings: () => setScreen("settings"),
+    steps: BINGE_STEPS,
+    currentStep: "binge-map",
+    onStep: navToStep
+  }, /*#__PURE__*/React.createElement(Card, {
+    style: {
+      background: C.surfaceHigh,
+      marginBottom: 18
+    }
+  }, /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, "Each video delivers genuine value AND systematically demolishes an objection to working with you. By Video 7 your viewer is pre-sold. Record in order \u2192 YouTube playlist \u2192 Skool \"Start Here.\"")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }
+  }, BINGE_BANK_MAP.map(v => /*#__PURE__*/React.createElement("button", {
+    key: v.n,
+    onClick: () => {
+      setBBSlot(v);
+      reset();
+      setScreen("binge-loom");
+    },
+    style: {
+      background: C.surfaceHigh,
+      border: `1.5px solid ${C.border}`,
+      borderRadius: 12,
+      padding: "16px 18px",
+      textAlign: "left",
+      display: "flex",
+      gap: 14,
+      alignItems: "center",
+      cursor: "pointer",
+      fontFamily: FF,
+      transition: "all 0.18s"
+    },
+    onMouseEnter: e => {
+      e.currentTarget.style.border = `1.5px solid ${v.color}`;
+      e.currentTarget.style.boxShadow = `0 0 16px ${v.color}22`;
+    },
+    onMouseLeave: e => {
+      e.currentTarget.style.border = `1.5px solid ${C.border}`;
+      e.currentTarget.style.boxShadow = "none";
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 40,
+      height: 40,
+      borderRadius: "50%",
+      background: v.color + "1A",
+      border: `2px solid ${v.color}55`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: v.color,
+      fontWeight: 700,
+      fontSize: 15,
+      flexShrink: 0
+    }
+  }, v.n), /*#__PURE__*/React.createElement("div", {
+    style: {
+      flex: 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 8,
+      alignItems: "center",
+      marginBottom: 3
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.cream,
+      fontWeight: 700,
+      fontSize: 14
+    }
+  }, v.title), /*#__PURE__*/React.createElement(Tag, {
+    color: v.color,
+    small: true
+  }, v.pillar)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.muted,
+      fontSize: 12,
+      lineHeight: 1.5
+    }
+  }, /*#__PURE__*/React.createElement("em", {
+    style: {
+      color: v.color
+    }
+  }, v.hook), " \u2014 ", v.desc)), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.muted,
+      fontSize: 16
+    }
+  }, "\u2192")))));
+
+  // ── BINGE LOOM QUESTIONS ──────────────────────────────────────────────────
+  if (screen === "binge-loom" && bbSlot) return /*#__PURE__*/React.createElement(Shell, {
+    onBack: () => setScreen("binge-map"),
+    backLabel: "Binge Bank",
+    title: `Video ${bbSlot.n}: ${bbSlot.title}`,
+    sub: bbSlot.desc,
+    onSettings: () => setScreen("settings"),
+    steps: BINGE_STEPS,
+    currentStep: "binge-loom",
+    onStep: navToStep
+  }, /*#__PURE__*/React.createElement(Card, {
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Label, {
+    color: bbSlot.color
+  }, "Step 1 \u2014 Record your Loom"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, "Answer these 6 questions on a Loom recording. Camera only. Ramble freely \u2014 aim for 10\u201320 minutes. Paste the transcript below when done.")), /*#__PURE__*/React.createElement(CopyBtn, {
+    text: bbSlot.loomQs.map((q, i) => `${i + 1}. ${q}`).join("\n\n"),
+    label: "Copy Questions"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 8
+    }
+  }, bbSlot.loomQs.map((q, i) => /*#__PURE__*/React.createElement("div", {
+    key: i,
+    style: {
+      display: "flex",
+      gap: 10,
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      minWidth: 22,
+      height: 22,
+      borderRadius: 6,
+      background: bbSlot.color + "14",
+      border: `1px solid ${bbSlot.color}44`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: bbSlot.color,
+      fontWeight: 700,
+      fontSize: 10,
+      flexShrink: 0
+    }
+  }, i + 1), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.cream,
+      fontSize: 13,
+      lineHeight: 1.6,
+      paddingTop: 2
+    }
+  }, q))))), /*#__PURE__*/React.createElement(Card, {
+    glow: true
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 12,
+      alignItems: "flex-start",
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: 22
+    }
+  }, "\uD83C\uDF99\uFE0F"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 14,
+      marginBottom: 5
+    }
+  }, "Step 2 \u2014 Record your Loom answers"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12,
+      lineHeight: 1.7
+    }
+  }, "Open Loom. Answer each question freely \u2014 camera on, no editing needed. Aim for ", /*#__PURE__*/React.createElement("strong", {
+    style: {
+      color: C.violet
+    }
+  }, "10\u201320 minutes."), " Download your auto-transcript when done. You'll paste it into Claude alongside the titles prompt on the next step."))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    onClick: () => setScreen("titles")
+  }, "I've Recorded \u2014 Get My Title Prompt \u2192"), /*#__PURE__*/React.createElement(Btn, {
+    variant: "ghost",
+    onClick: () => setScreen("binge-map")
+  }, "\u2190 Change Video"))));
+
+  // ── SERIES BUILDER ────────────────────────────────────────────────────────
+  if (screen === "series-builder") return /*#__PURE__*/React.createElement(Shell, {
+    onBack: () => setScreen("home"),
+    backLabel: "Home",
+    title: "Series Builder",
+    sub: "Generate 5 custom series concepts \xB7 Pick one \xB7 Build it out",
+    onSettings: () => setScreen("settings"),
+    steps: SERIES_STEPS,
+    currentStep: "series-builder",
+    onStep: navToStep
+  }, /*#__PURE__*/React.createElement(Card, {
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 26,
+      height: 26,
+      borderRadius: "50%",
+      background: `linear-gradient(135deg,${C.mint},${C.violet})`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#fff",
+      fontWeight: 700,
+      fontSize: 12,
+      flexShrink: 0
+    }
+  }, "1"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: FF,
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 14,
+      marginBottom: 3
+    }
+  }, "Generate your series concepts"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, "Copy this prompt \u2192 Claude \u2192 get 5 series concepts built from your Business Brain \u2192 paste back below."))), /*#__PURE__*/React.createElement(CopyBtn, {
+    text: seriesConceptsPrompt(vault, vis, letter),
+    label: "\u2726 Copy Prompt"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingLeft: 36
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.surfaceHigh,
+      borderRadius: 10,
+      padding: "10px 13px",
+      maxHeight: 100,
+      overflowY: "auto",
+      border: `1px solid ${C.border}`,
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("pre", {
+    style: {
+      color: C.muted,
+      fontSize: 11,
+      lineHeight: 1.65,
+      margin: 0,
+      whiteSpace: "pre-wrap",
+      fontFamily: FM
+    }
+  }, seriesConceptsPrompt(vault, vis, letter).slice(0, 400), "\u2026")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      alignItems: "center",
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement("a", {
+    href: "https://claude.ai/new",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 6,
+      padding: "7px 16px",
+      borderRadius: 8,
+      background: `linear-gradient(135deg,${C.mint},${C.violet})`,
+      color: "#fff",
+      fontSize: 12,
+      fontWeight: 600,
+      fontFamily: FF,
+      textDecoration: "none"
+    }
+  }, "Open Claude.ai \u2197"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 6,
+      padding: "7px 13px",
+      borderRadius: 8,
+      background: C.gold + "11",
+      border: `1px solid ${C.gold}33`,
+      fontSize: 11,
+      color: C.gold,
+      fontWeight: 600,
+      fontFamily: FF
+    }
+  }, "\u26A0\uFE0F Enable Research Mode in Claude before running this prompt")))), /*#__PURE__*/React.createElement(Card, {
+    style: {
+      marginBottom: 14
+    },
+    glow: !!seriesConcepts
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      alignItems: "flex-start",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 26,
+      height: 26,
+      borderRadius: "50%",
+      background: `linear-gradient(135deg,${C.mint},${C.violet})`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#fff",
+      fontWeight: 700,
+      fontSize: 12,
+      flexShrink: 0
+    }
+  }, "2"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: FF,
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 14,
+      marginBottom: 3
+    }
+  }, "Paste the 5 concepts here"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, "Copy Claude's full response and paste it below."))), /*#__PURE__*/React.createElement(TA, {
+    value: seriesConcepts,
+    onChange: e => setSeriesConcepts(e.target.value),
+    rows: 8,
+    placeholder: "Paste the 5 series concepts here..."
+  })), seriesConcepts.trim() && /*#__PURE__*/React.createElement(Card, {
+    glow: true,
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      alignItems: "flex-start",
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 26,
+      height: 26,
+      borderRadius: "50%",
+      background: `linear-gradient(135deg,${C.mint},${C.violet})`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#fff",
+      fontWeight: 700,
+      fontSize: 12,
+      flexShrink: 0
+    }
+  }, "3"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: FF,
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 14,
+      marginBottom: 3
+    }
+  }, "Pick your series \u2014 enter its title and premise"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, "Copy the series title and premise from above."))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Label, null, "Series title:"), /*#__PURE__*/React.createElement(TA, {
+    value: pickedSeries.title,
+    onChange: e => setPickedSeries(p => ({
+      ...p,
+      title: e.target.value
+    })),
+    rows: 1,
+    placeholder: "e.g. The Spiritual CEO Foundation Series"
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Label, null, "Premise (1-2 sentences from the concept):"), /*#__PURE__*/React.createElement(TA, {
+    value: pickedSeries.premise,
+    onChange: e => setPickedSeries(p => ({
+      ...p,
+      premise: e.target.value
+    })),
+    rows: 2,
+    placeholder: "e.g. A 7-video series for spiritual entrepreneurs who..."
+  })))), pickedSeries.title.trim() && pickedSeries.premise.trim() && /*#__PURE__*/React.createElement(Card, {
+    style: {
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 26,
+      height: 26,
+      borderRadius: "50%",
+      background: `linear-gradient(135deg,${C.mint},${C.violet})`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: "#fff",
+      fontWeight: 700,
+      fontSize: 12,
+      flexShrink: 0
+    }
+  }, "4"), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontFamily: FF,
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 14,
+      marginBottom: 3
+    }
+  }, "Build out your full series map"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, "Copy \u2192 Claude \u2192 get all 7 videos with titles, descriptions, and Loom questions \u2192 paste back."))), /*#__PURE__*/React.createElement(CopyBtn, {
+    text: seriesBuildoutPrompt(pickedSeries.title, pickedSeries.premise, vault, vis, letter),
+    label: "\u2726 Copy Prompt"
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
+      paddingLeft: 36
+    }
+  }, /*#__PURE__*/React.createElement(TA, {
+    value: seriesBuildout,
+    onChange: e => setSeriesBuildout(e.target.value),
+    rows: 8,
+    placeholder: "Paste your complete series map here..."
+  }), seriesBuildout.trim() && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 12
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    onClick: () => {
+      setSeriesMap({
+        title: pickedSeries.title,
+        buildout: seriesBuildout
+      });
+      setScreen("series-map");
+    }
+  }, "View My Series Map \u2192")))));
+
+  // ── SERIES MAP ────────────────────────────────────────────────────────────
+  if (screen === "series-map" && seriesMap) return /*#__PURE__*/React.createElement(Shell, {
+    onBack: () => setScreen("series-builder"),
+    backLabel: "Series Builder",
+    title: seriesMap.title,
+    sub: "Your full series map \u2014 click any video to start scripting",
+    onSettings: () => setScreen("settings"),
+    steps: SERIES_STEPS,
+    currentStep: "series-map",
+    onStep: navToStep
+  }, /*#__PURE__*/React.createElement(Card, {
+    style: {
+      background: C.surfaceHigh,
+      marginBottom: 18
+    }
+  }, /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, "Click any video below to get your topic-specific Loom questions and script prompt for that video.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.surfaceHigh,
+      border: `1px solid ${C.border}`,
+      borderRadius: 12,
+      padding: "18px 20px",
+      marginBottom: 20
+    }
+  }, /*#__PURE__*/React.createElement("pre", {
+    style: {
+      color: C.cream,
+      fontSize: 13,
+      lineHeight: 1.85,
+      margin: 0,
+      whiteSpace: "pre-wrap",
+      fontFamily: FF
+    }
+  }, seriesMap.buildout)), /*#__PURE__*/React.createElement(Card, {
+    glow: true
+  }, /*#__PURE__*/React.createElement(Label, {
+    color: C.violet
+  }, "Ready to record a video from this series?"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      marginBottom: 12,
+      fontSize: 12
+    }
+  }, "Enter the video number and title from your series map above, then go to the input screen to generate your script prompt."), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      alignItems: "center",
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement("input", {
+    placeholder: "Video #",
+    style: {
+      width: 70,
+      background: C.surfaceHigh,
+      border: `1px solid ${C.border}`,
+      borderRadius: 8,
+      color: C.cream,
+      padding: "10px 12px",
+      fontSize: 13,
+      outline: "none",
+      fontFamily: FF
+    },
+    onChange: e => setSeriesSlot(p => ({
+      ...p,
+      n: e.target.value
+    }))
+  }), /*#__PURE__*/React.createElement("input", {
+    placeholder: "Video title",
+    style: {
+      flex: 1,
+      minWidth: 180,
+      background: C.surfaceHigh,
+      border: `1px solid ${C.border}`,
+      borderRadius: 8,
+      color: C.cream,
+      padding: "10px 12px",
+      fontSize: 13,
+      outline: "none",
+      fontFamily: FF
+    },
+    onChange: e => setSeriesSlot(p => ({
+      ...p,
+      title: e.target.value,
+      seriesTitle: seriesMap.title
+    }))
+  }), /*#__PURE__*/React.createElement(Btn, {
+    onClick: () => setScreen("input"),
+    disabled: !seriesSlot?.title?.trim()
+  }, "Start This Video \u2192"))));
+
+  // ── INPUT (WEEKLY + SERIES) ───────────────────────────────────────────────
+  if (screen === "input") return /*#__PURE__*/React.createElement(Shell, {
+    onBack: () => setScreen(seriesSlot ? "series-map" : "home"),
+    backLabel: seriesSlot ? "Series Map" : "Home",
+    title: seriesSlot ? `Series Video ${seriesSlot.n}: ${seriesSlot.title}` : "Choose Your Starting Point",
+    sub: seriesSlot ? seriesMap?.title : "Pick whatever content you have right now",
+    onSettings: () => setScreen("settings"),
+    steps: seriesSlot ? SERIES_STEPS : WEEKLY_STEPS,
+    currentStep: "input",
+    onStep: navToStep
+  }, !inputType ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gridTemplateColumns: "1fr 1fr",
+      gap: 12
+    }
+  }, [{
+    id: "braindump",
+    icon: "🎙️",
+    label: "Brain Dump",
+    desc: "Answer one question on Loom. Paste the full transcript here."
+  }, {
+    id: "call",
+    icon: "📞",
+    label: "Coaching Call",
+    desc: "Paste a transcript from a client call. Full length is fine — no need to trim."
+  }, {
+    id: "short",
+    icon: "📱",
+    label: "Short-Form Post",
+    desc: "Paste a performing post or reel script to expand into long-form."
+  }, {
+    id: "story",
+    icon: "✍️",
+    label: "Story Archive",
+    desc: "Mine your entire life for content. One Loom interview → 50 organized stories → infinite video ideas."
+  }].map(t => /*#__PURE__*/React.createElement("button", {
+    key: t.id,
+    onClick: () => setInputType(t.id),
+    style: {
+      background: C.surfaceHigh,
+      border: `1.5px solid ${C.border}`,
+      borderRadius: 12,
+      padding: "18px 16px",
+      textAlign: "left",
+      cursor: "pointer",
+      fontFamily: FF,
+      transition: "all 0.18s"
+    },
+    onMouseEnter: e => e.currentTarget.style.border = `1.5px solid ${C.lavDim}`,
+    onMouseLeave: e => e.currentTarget.style.border = `1.5px solid ${C.border}`
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: 22,
+      marginBottom: 8
+    }
+  }, t.icon), /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: C.cream,
+      fontSize: 14,
+      marginBottom: 4
+    }
+  }, t.label), /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.muted,
+      fontSize: 12,
+      lineHeight: 1.55
+    }
+  }, t.desc)))) : /*#__PURE__*/React.createElement(React.Fragment, null, inputType === "story" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Card, {
+    style: {
+      background: C.violet + "08",
+      border: `1px solid ${C.violet}33`,
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement(Label, {
+    color: C.violet,
+    style: {
+      marginBottom: 4
+    }
+  }, "\u270D\uFE0F Step 1 \u2014 Build Your Story Bank (one-time)"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12,
+      lineHeight: 1.65
+    }
+  }, "Copy this prompt \u2192 paste into a new Claude chat \u2192 Claude will interview you across 7 categories \u2192 answer on Loom \u2192 paste your transcript back \u2192 Claude outputs ", /*#__PURE__*/React.createElement("strong", {
+    style: {
+      color: C.violet
+    }
+  }, "40\u201355 organized stories"), " with YouTube hook angles. Save that doc. It fuels months of content.")), /*#__PURE__*/React.createElement(CopyBtn, {
+    text: STORY_BANK_PROMPT,
+    label: "Copy Prompt",
+    style: {
+      marginLeft: 12,
+      flexShrink: 0
+    }
+  })), /*#__PURE__*/React.createElement("a", {
+    href: "https://claude.ai/new",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    style: {
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 5,
+      padding: "6px 13px",
+      borderRadius: 7,
+      background: C.surfaceHigh,
+      border: `1px solid ${C.border}`,
+      color: C.violet,
+      fontSize: 12,
+      fontWeight: 600,
+      fontFamily: FF,
+      textDecoration: "none"
+    }
+  }, "Open Claude \u2197")), /*#__PURE__*/React.createElement(Card, {
+    style: {
+      background: C.surfaceHigh,
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement(Label, {
+    color: C.violet
+  }, "Step 2 \u2014 Pick a story to build your video around"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12,
+      marginBottom: 10
+    }
+  }, "Already have your Story Bank? Paste one story below \u2014 the title + summary is enough. Claude will build titles and a script around that specific story.")), /*#__PURE__*/React.createElement(Label, null, "Paste your chosen story:"), /*#__PURE__*/React.createElement(TA, {
+    value: transcript,
+    onChange: e => setT(e.target.value),
+    rows: 6,
+    placeholder: "e.g. THE BARTER THAT COST ME EVERYTHING\nI agreed to barter with a client who had just had a $22k month with me because I felt like she had something I didn\'t. Within two months her business collapsed. I realized I was trying to pour into a vessel that wasn\'t ready to receive — and that I violated my own value by agreeing out of scarcity..."
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      marginTop: 12
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    onClick: () => setScreen("titles"),
+    disabled: !transcript.trim()
+  }, "Generate Title Suggestions \u2192"), /*#__PURE__*/React.createElement(Btn, {
+    variant: "ghost",
+    onClick: () => setInputType(null)
+  }, "\u2190 Change"))), inputType === "braindump" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Card, {
+    style: {
+      background: C.surfaceHigh,
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement(Label, {
+    color: C.violet
+  }, "\uD83C\uDF99\uFE0F Pick a question to answer on Loom"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 7,
+      marginBottom: 10
+    }
+  }, BRAIN_DUMP_QS.slice(qOff, qOff + 5).map((q, i) => /*#__PURE__*/React.createElement("button", {
+    key: i,
+    onClick: () => setT(q),
+    style: {
+      background: transcript === q ? C.violet + "14" : C.surface,
+      border: `1.5px solid ${transcript === q ? C.violet : C.border}`,
+      borderRadius: 8,
+      padding: "9px 13px",
+      color: C.cream,
+      fontSize: 13,
+      fontStyle: "italic",
+      textAlign: "left",
+      cursor: "pointer",
+      fontFamily: FF,
+      transition: "all 0.15s"
+    }
+  }, "\"", q, "\""))), /*#__PURE__*/React.createElement("button", {
+    onClick: () => setQOff(o => o + 5 >= BRAIN_DUMP_QS.length ? 0 : o + 5),
+    style: {
+      background: "none",
+      border: "none",
+      color: C.muted,
+      fontSize: 12,
+      cursor: "pointer",
+      fontFamily: FF
+    }
+  }, "\u21BB More questions")), /*#__PURE__*/React.createElement(Label, null, "Paste your Loom transcript:"), /*#__PURE__*/React.createElement(TA, {
+    value: transcript,
+    onChange: e => setT(e.target.value),
+    rows: 9,
+    placeholder: "Paste your content here \u2014 full length, unedited..."
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      marginTop: 12
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    onClick: () => setScreen("titles"),
+    disabled: !transcript.trim()
+  }, "Generate Title Suggestions \u2192"), /*#__PURE__*/React.createElement(Btn, {
+    variant: "ghost",
+    onClick: () => setInputType(null)
+  }, "\u2190 Change"))), inputType === "call" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Card, {
+    style: {
+      background: C.surfaceHigh,
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement(Label, {
+    color: C.violet
+  }, "\uD83D\uDCDE Coaching Call Transcript"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, "Paste the full transcript \u2014 even 60-90 minute calls work perfectly. Claude handles the whole thing.")), /*#__PURE__*/React.createElement(Label, null, "Paste your transcript:"), /*#__PURE__*/React.createElement(TA, {
+    value: transcript,
+    onChange: e => setT(e.target.value),
+    rows: 9,
+    placeholder: "Paste your content here \u2014 full length, unedited..."
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      marginTop: 12
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    onClick: () => setScreen("titles"),
+    disabled: !transcript.trim()
+  }, "Generate Title Suggestions \u2192"), /*#__PURE__*/React.createElement(Btn, {
+    variant: "ghost",
+    onClick: () => setInputType(null)
+  }, "\u2190 Change"))), inputType === "short" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Card, {
+    style: {
+      background: C.surfaceHigh,
+      marginBottom: 14
+    }
+  }, /*#__PURE__*/React.createElement(Label, {
+    color: C.violet
+  }, "\uD83D\uDCF1 Short-Form Content"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, "Paste a high-performing post, reel script, or caption to expand into long-form.")), /*#__PURE__*/React.createElement(Label, null, "Paste your content:"), /*#__PURE__*/React.createElement(TA, {
+    value: transcript,
+    onChange: e => setT(e.target.value),
+    rows: 9,
+    placeholder: "Paste your content here \u2014 full length, unedited..."
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 10,
+      marginTop: 12
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    onClick: () => setScreen("titles"),
+    disabled: !transcript.trim()
+  }, "Generate Title Suggestions \u2192"), /*#__PURE__*/React.createElement(Btn, {
+    variant: "ghost",
+    onClick: () => setInputType(null)
+  }, "\u2190 Change")))));
+
+  // ── TITLES ────────────────────────────────────────────────────────────────
+  if (screen === "titles") {
+    const prompt = titlesPrompt(transcript, vault, vis, letter, bbSlot, seriesSlot);
+    const onBack = () => setScreen(bbSlot ? "binge-loom" : seriesSlot ? "input" : "input");
+    return /*#__PURE__*/React.createElement(Shell, {
+      onBack: onBack,
+      backLabel: "Back",
+      title: "Title Generator",
+      sub: "50 suggestions \xB7 Pick your winner",
+      onSettings: () => setScreen("settings"),
+      steps: bbSlot ? BINGE_STEPS : seriesSlot ? SERIES_STEPS : WEEKLY_STEPS,
+      currentStep: "titles",
+      onStep: navToStep
+    }, /*#__PURE__*/React.createElement(PromptBox, {
+      prompt: prompt,
+      label: "Copy prompt \u2192 open a new Claude chat \u2192 paste prompt \u2192 then paste your Loom transcript underneath \u2192 send \u2192 come back with your chosen title"
+    }), /*#__PURE__*/React.createElement(Card, {
+      glow: true
+    }, /*#__PURE__*/React.createElement(Label, {
+      color: C.violet
+    }, "Your chosen title:"), /*#__PURE__*/React.createElement(Muted, {
+      style: {
+        fontSize: 12,
+        marginBottom: 10
+      }
+    }, "Pick the one that feels most like you \u2014 or remix two together."), /*#__PURE__*/React.createElement("textarea", {
+      value: title,
+      onChange: e => setTitle(e.target.value),
+      rows: 2,
+      style: {
+        width: "100%",
+        background: C.surfaceHigh,
+        border: `1.5px solid ${C.borderGlow}`,
+        borderRadius: 8,
+        color: C.cream,
+        padding: "12px 14px",
+        fontSize: 15,
+        fontWeight: 600,
+        outline: "none",
+        fontFamily: FF,
+        resize: "none"
+      },
+      placeholder: "Paste or type your chosen title here..."
+    }), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 12
+      }
+    }, /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => setScreen("deepdive"),
+      disabled: !title.trim()
+    }, "Generate Deep Dive Questions \u2192"))));
+  }
+
+  // ── DEEP DIVE ─────────────────────────────────────────────────────────────
+  if (screen === "deepdive") {
+    const prompt = ddqPrompt(title, vault, vis, letter);
+    return /*#__PURE__*/React.createElement(Shell, {
+      onBack: () => setScreen("titles"),
+      backLabel: "Titles",
+      title: "Deep Dive Questions",
+      sub: `Surface the gold for: "${title.slice(0, 50)}${title.length > 50 ? "..." : ""}`,
+      onSettings: () => setScreen("settings"),
+      steps: bbSlot ? BINGE_STEPS : seriesSlot ? SERIES_STEPS : WEEKLY_STEPS,
+      currentStep: "deepdive",
+      onStep: navToStep
+    }, /*#__PURE__*/React.createElement(PromptBox, {
+      prompt: prompt,
+      label: "Copy prompt \u2192 open a new Claude chat \u2192 paste prompt \u2192 record your Loom answers \u2192 paste your transcript underneath in that same chat"
+    }), /*#__PURE__*/React.createElement(Card, {
+      style: {
+        background: C.surfaceHigh,
+        border: `1px solid ${C.violet}33`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: 20,
+        marginBottom: 8
+      }
+    }, "\uD83C\uDF99\uFE0F"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontWeight: 700,
+        color: C.lavLight,
+        fontSize: 14,
+        marginBottom: 6
+      }
+    }, "Record your Loom answers"), /*#__PURE__*/React.createElement(Muted, {
+      style: {
+        fontSize: 13,
+        lineHeight: 1.7
+      }
+    }, "Open Loom. Answer each question in one take \u2014 camera on, no editing needed. Ramble freely. ", /*#__PURE__*/React.createElement("strong", {
+      style: {
+        color: C.violet
+      }
+    }, "10\u201320 minutes is ideal."), " The more you give Claude, the better your script."), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 16
+      }
+    }, /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => setScreen("script")
+    }, "I've Recorded \u2014 Generate My Script \u2192"))));
+  }
+
+  // ── SCRIPT ────────────────────────────────────────────────────────────────
+  if (screen === "script") {
+    const src = ddT || transcript;
+    const prompt = scriptPrompt(title, src, vault, vis, letter, bbSlot, seriesSlot);
+    return /*#__PURE__*/React.createElement(Shell, {
+      onBack: () => setScreen("deepdive"),
+      backLabel: "Deep Dive",
+      title: "Script Generator",
+      sub: "Hook \xB7 Proof \xB7 Promise \xB7 Plan \xB7 Content \xB7 Close",
+      onSettings: () => setScreen("settings"),
+      steps: bbSlot ? BINGE_STEPS : seriesSlot ? SERIES_STEPS : WEEKLY_STEPS,
+      currentStep: "script",
+      onStep: navToStep
+    }, /*#__PURE__*/React.createElement(PromptBox, {
+      prompt: prompt,
+      label: "Copy prompt \u2192 open a new Claude chat \u2192 paste prompt \u2192 paste your Deep Dive Loom transcript underneath \u2192 send"
+    }), /*#__PURE__*/React.createElement(Card, {
+      style: {
+        background: C.surfaceHigh,
+        border: `1px solid ${C.violet}33`
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontWeight: 700,
+        color: C.lavLight,
+        fontSize: 13,
+        marginBottom: 12
+      }
+    }, "How to use this prompt:"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 10
+      }
+    }, [["1", "Copy the prompt above"], ["2", "Open a new Claude chat — paste the prompt"], ["3", "Then paste your Deep Dive Loom transcript directly underneath it in the same message"], ["4", "Hit send — Claude outputs a beautifully formatted script you can screenshare while recording"], ["5", "4 thumbnail concepts are at the bottom of your script — built from your actual content"]].map(([n, t]) => /*#__PURE__*/React.createElement("div", {
+      key: n,
+      style: {
+        display: "flex",
+        gap: 10,
+        alignItems: "flex-start"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        width: 22,
+        height: 22,
+        borderRadius: 6,
+        background: C.violet + "1A",
+        border: `1px solid ${C.violet}44`,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        color: C.violet,
+        fontWeight: 700,
+        fontSize: 10,
+        flexShrink: 0
+      }
+    }, n), /*#__PURE__*/React.createElement(Muted, {
+      style: {
+        fontSize: 13,
+        paddingTop: 2
+      }
+    }, t))))), /*#__PURE__*/React.createElement("div", {
+      style: {
+        marginTop: 4
+      }
+    }, /*#__PURE__*/React.createElement(Btn, {
+      onClick: () => setScreen("production")
+    }, "Next: Production & Editing \u2192")));
+  }
+
+  // ── PRODUCTION ────────────────────────────────────────────────────────────
+  if (screen === "production") return /*#__PURE__*/React.createElement(Shell, {
+    onBack: () => setScreen("script"),
+    backLabel: "Script",
+    title: "Production",
+    sub: "Record \xB7 Edit \xB7 Thumbnail \xB7 Publish",
+    onSettings: () => setScreen("settings"),
+    steps: bbSlot ? BINGE_STEPS : seriesSlot ? SERIES_STEPS : WEEKLY_STEPS,
+    currentStep: "production",
+    onStep: navToStep
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 14
+    }
+  }, /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 14,
+      marginBottom: 12
+    }
+  }, "\uD83D\uDCF9 Record in 3 Parts (Loom)"), [{
+    n: 1,
+    l: "HOOK",
+    m: "Face only",
+    t: "20–30 sec",
+    i: "Camera only. Read the Hook section direct to camera."
+  }, {
+    n: 2,
+    l: "CONTENT",
+    m: "Screenshare",
+    t: "5–20 min",
+    i: "Screenshare. Walk through content sections using bullet points."
+  }, {
+    n: 3,
+    l: "CLOSE + CTA",
+    m: "Face only",
+    t: "30–45 sec",
+    i: "Back to camera. Warm, from the heart. Confident CTA."
+  }].map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.n,
+    style: {
+      display: "flex",
+      gap: 12,
+      marginBottom: s.n < 3 ? 12 : 0,
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 28,
+      height: 28,
+      borderRadius: "50%",
+      background: C.violet + "1A",
+      border: `1.5px solid ${C.violet}55`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: C.violet,
+      fontWeight: 700,
+      fontSize: 12,
+      flexShrink: 0
+    }
+  }, s.n), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: C.cream,
+      fontSize: 13,
+      marginBottom: 2
+    }
+  }, s.l, " ", /*#__PURE__*/React.createElement("span", {
+    style: {
+      color: C.muted,
+      fontWeight: 400
+    }
+  }, "\xB7 ", s.m, " \xB7 ", s.t)), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, s.i))))), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 14,
+      marginBottom: 12
+    }
+  }, "\u2702\uFE0F Edit in Descript (10 min, AI only)"), [{
+    n: 1,
+    l: "Combine your 3 clips",
+    t: "New project → drag in all 3 in order."
+  }, {
+    n: 2,
+    l: "Remove Silences",
+    t: 'Actions → "Remove Silences". Set 0.5s threshold.'
+  }, {
+    n: 3,
+    l: "Remove Filler Words",
+    t: 'Actions → "Remove Filler Words". Review and approve.'
+  }, {
+    n: 4,
+    l: "Add Captions",
+    t: "Lavender or white text. One click."
+  }, {
+    n: 5,
+    l: "Studio Sound",
+    t: 'Actions → "Studio Sound". Professional audio instantly.'
+  }, {
+    n: 6,
+    l: "Publish Unlisted to YouTube",
+    t: 'Share → "Publish to YouTube". Unlisted first for thumbnail.'
+  }].map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.n,
+    style: {
+      display: "flex",
+      gap: 10,
+      marginBottom: s.n < 6 ? 10 : 0,
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 22,
+      height: 22,
+      borderRadius: 6,
+      background: C.violet + "1A",
+      border: `1px solid ${C.violet}44`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: C.violet,
+      fontWeight: 700,
+      fontSize: 10,
+      flexShrink: 0
+    }
+  }, s.n), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.cream,
+      fontWeight: 600,
+      fontSize: 13,
+      marginBottom: 2
+    }
+  }, s.l), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, s.t))))), /*#__PURE__*/React.createElement(Card, null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 14,
+      marginBottom: 10
+    }
+  }, "\uD83D\uDDBC\uFE0F Create Your Thumbnail"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.violet + "0D",
+      border: `1px solid ${C.violet}33`,
+      borderRadius: 10,
+      padding: "13px 15px",
+      marginBottom: 12
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.violet,
+      fontWeight: 700,
+      fontSize: 13,
+      marginBottom: 5
+    }
+  }, "\u2726 Your 4 thumbnail concepts are at the bottom of your script"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12,
+      lineHeight: 1.65
+    }
+  }, "Claude generated them from your actual content using the Curiosity Gap framework \u2014 Result, Transformation, Moment, Story, and Novelty types. Each includes main character, composition, text (max 4 words, never repeats title), and color brief. Brief your designer or paste the concept into an AI image tool.")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: C.gold + "11",
+      border: `1px solid ${C.gold}33`,
+      borderRadius: 10,
+      padding: "12px 14px"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.gold,
+      fontWeight: 700,
+      fontSize: 13,
+      marginBottom: 4
+    }
+  }, "\u2B50 Quickest option: thumbnailcreator.com"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, "Paste your unlisted YouTube link \u2192 AI pulls frames from your actual video \u2192 generates ready-to-use thumbnails. Best starting point before briefing a designer."))), (mode === "binge" || seriesSlot) && /*#__PURE__*/React.createElement(Card, {
+    style: {
+      border: `1px solid ${C.violet}44`,
+      background: C.violet + "06"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontWeight: 700,
+      color: C.lavLight,
+      fontSize: 14,
+      marginBottom: 10
+    }
+  }, "\u2726 Create Slides in Gamma"), [{
+    n: 1,
+    l: "Go to gamma.app",
+    t: "Create account → Create New → Paste Text."
+  }, {
+    n: 2,
+    l: "Paste your Content section",
+    t: "Copy the 📖 CONTENT section from your script. Paste into Gamma."
+  }, {
+    n: 3,
+    l: 'Set to "Condense" + "Presentation"',
+    t: "Gamma will structure it into clean slides automatically."
+  }, {
+    n: 4,
+    l: "Pick a theme",
+    t: "Daydream, Soft Cloud, or Purple — or paste your brand hex codes."
+  }, {
+    n: 5,
+    l: "Screenshare while recording",
+    t: "Screenshare the Gamma tab in Loom. Click through slides as you talk."
+  }].map(s => /*#__PURE__*/React.createElement("div", {
+    key: s.n,
+    style: {
+      display: "flex",
+      gap: 10,
+      marginBottom: s.n < 5 ? 10 : 0,
+      alignItems: "flex-start"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      width: 20,
+      height: 20,
+      borderRadius: 5,
+      background: C.violet + "22",
+      border: `1px solid ${C.violet}44`,
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      color: C.violet,
+      fontWeight: 700,
+      fontSize: 10,
+      flexShrink: 0
+    }
+  }, s.n), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.cream,
+      fontWeight: 600,
+      fontSize: 13,
+      marginBottom: 1
+    }
+  }, s.l), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      fontSize: 12
+    }
+  }, s.t))))), mode === "binge" && bbSlot && /*#__PURE__*/React.createElement(Card, {
+    style: {
+      background: C.violet + "08",
+      border: `1px solid ${C.violet}44`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.violet,
+      fontWeight: 700,
+      fontSize: 14,
+      marginBottom: 6
+    }
+  }, "\u2726 Binge Bank Progress"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      marginBottom: 12
+    }
+  }, bbSlot.n < 7 ? `Video ${bbSlot.n} done! ${7 - bbSlot.n} video${7 - bbSlot.n === 1 ? "" : "s"} left in your Binge Bank.` : "🎉 All 7 videos done! Create your YouTube playlist and add it to your Skool Classroom as the Start Here module."), bbSlot.n < 7 && /*#__PURE__*/React.createElement(Btn, {
+    variant: "ghost",
+    onClick: () => {
+      reset();
+      setScreen("binge-map");
+    }
+  }, "Record Video ", bbSlot.n + 1, " \u2192")), seriesSlot && seriesMap && /*#__PURE__*/React.createElement(Card, {
+    style: {
+      background: C.mint + "08",
+      border: `1px solid ${C.mint}44`
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: C.mint,
+      fontWeight: 700,
+      fontSize: 14,
+      marginBottom: 6
+    }
+  }, "\u2726 Series Progress"), /*#__PURE__*/React.createElement(Muted, {
+    style: {
+      marginBottom: 12
+    }
+  }, "Video ", seriesSlot.n, " of \"", seriesMap.title, "\" done."), /*#__PURE__*/React.createElement(Btn, {
+    variant: "ghost",
+    onClick: () => {
+      reset();
+      setScreen("series-map");
+    }
+  }, "\u2190 Back to Series Map")), /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      paddingTop: 8
+    }
+  }, /*#__PURE__*/React.createElement(Btn, {
+    variant: "muted",
+    onClick: () => {
+      reset();
+      setMode(null);
+      setBBSlot(null);
+      setSeriesSlot(null);
+      setScreen("home");
+    }
+  }, "\u2726 Start a New Video"))));
+  return null;
+}
+var root=ReactDOM.createRoot(document.getElementById('root'));
+root.render(React.createElement(App));
+})();
+</script>
+</body>
+</html>
